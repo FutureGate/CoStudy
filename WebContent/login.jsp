@@ -8,15 +8,23 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-	<link rel="stylesheet" href="./css/loginBody.css">
+	<link rel="stylesheet" href="./css/authBody.css">
 	
 	<title>코스터디 :: 로그인</title>
+	
+	<style>
+		#btnLogin {
+			margin-right: 0.5em;
+		}
+	</style>
+	
 </head>
 
 <body>
 	<body id="root">
+    	<jsp:include page="./component/Auth/AuthHeader.jsp"></jsp:include>
     	
-    	<jsp:include page="./component/Login/LoginBody.jsp"></jsp:include>
+    	<jsp:include page="./component/Auth/LoginBody.jsp"></jsp:include>
     
     	<jsp:include page="./component/General/Footer.jsp"></jsp:include>
 	

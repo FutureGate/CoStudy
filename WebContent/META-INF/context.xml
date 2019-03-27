@@ -3,7 +3,7 @@
 		name="jdbc/CoStudy"
 		auth="Container"
 		type="javax.sql.DataSource"
-		driverClassName="com.mysql.jdbc.Driver"
+		driverClassName="com.mysql.cj.jdbc.Driver"
 		loginTimeout="10"
 		validationQuery="select 1 from dual"
 		maxWait="5000"

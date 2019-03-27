@@ -2,10 +2,11 @@
 <!DOCTYPE html >
 
 <head>
+
 <title>Footer</title>
 </head>
 	<body>
-		<div class="ui inverted vertical footer segment">
+		<div class="ui inverted vertical footer segment" id="footer">
       		<div class="ui center aligned container">
         		<div class="ui stackable inverted divided grid">
         			<div class="ten wide column">
@@ -16,7 +17,7 @@
 			            </p>
 		          	</div>
         		
-          			<div class="five wide column">
+          			<div class="six wide column">
             			<h4 class="ui inverted header">사이트</h4>
             			
             			<div class="ui inverted link list">
