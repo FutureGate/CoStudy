@@ -1,0 +1,19 @@
+<Context path="/CoStudy" docBase="www">
+	<Resource
+		name="jdbc/CoStudy"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		loginTimeout="10"
+		validationQuery="select 1 from dual"
+		maxWait="5000"
+		username="root"
+		password="487923"
+		testOnBorrow="true"
+		url="jdbc:mysql://localhost:11081/costudy?characterEncoding=UTF-8&amp;serverTimezone=UTC" />
+		
+	<ResourceLink 
+		type="javax.sql.DataSource"
+		name="jdbc/CoStudy"
+		global="jdbc/CoStudy" />
+</Context>
