@@ -1,12 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html >
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
-<link rel="stylesheet" href="../css/header.css">
-<script src="../js/header.js"></script>
-
-
 <title>Footer</title>
 </head>
 	<body>

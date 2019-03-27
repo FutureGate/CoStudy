@@ -1,20 +1,21 @@
-$(document).ready(function() {
-        // fix main menu to page on passing
-        $(".main.menu").visibility({
-          type: "fixed"
-        });
-        $(".overlay").visibility({
-          type: "fixed",
-          offset: 80
-        });
-        // lazy load images
-        $(".image").visibility({
-          type: "image",
-          transition: "vertical flip in",
-          duration: 500
-        });
-        // show dropdown on hover
-        $(".main.menu  .ui.dropdown").dropdown({
-          on: "hover"
-        });
-      });
+(function ($) {
+  $(document).ready(function(){
+	// hide .navbar first
+	$(".fixed.menu").hide();
+	
+	// fade in .navbar
+	$(function () {
+		$(window).scroll(function () {
+            // set distance user needs to scroll before we fadeIn navbar
+			if ($(this).scrollTop() > 100) {
+				$(".fixed.menu").transition("fade in");
+			} else {
+				$(".fixed.menu").transition("fade out");
+			}
+		});
+
+	
+	});
+
+});
+  }(jQuery));
