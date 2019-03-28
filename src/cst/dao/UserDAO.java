@@ -42,6 +42,8 @@ public class UserDAO {
 			
 			pstmt.setString(1, userID);
 			
+			rs = pstmt.executeQuery();
+			
 			if(rs.next()) {
 				if(rs.getString("userPassword").toString().equals(userPassword)) {
 					// 로그인 성공
@@ -127,7 +129,7 @@ public class UserDAO {
 			pstmt.setString(3, userNick);
 			pstmt.setString(4, userEmail);
 			pstmt.setString(5, null);
-			pstmt.setDate(6, stringToDate(userBorn));
+			pstmt.setString(6, userBorn);
 			pstmt.setString(7, userGender);
 			pstmt.setInt(8, 0);
 			
@@ -147,11 +149,5 @@ public class UserDAO {
 		
 		// DB 오류
 		return -1;
-	}
-	
-	public Date stringToDate(String data) {
-	        Date date = Date.valueOf(data);
-	        
-	        return date;
 	}
 }

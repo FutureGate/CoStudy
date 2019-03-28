@@ -9,6 +9,7 @@
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 	<link rel="stylesheet" href="./css/authBody.css">
+	<link rel="stylesheet" href="./css/footer.css">
 	
 	<title>코스터디 :: 회원가입</title>
 	

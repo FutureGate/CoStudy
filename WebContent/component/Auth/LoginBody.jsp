@@ -5,10 +5,10 @@
 <title>LoginBody</title>
 </head>
 	<body>
-    	<div class="ui middle aligned center aligned grid">
-      		<div class="column">
+    	<div class="ui middle aligned center aligned grid" id="authForm">
+      		<div class="column" id="authContent">
         		<h2 class="ui center aligned header">
-          			로그인
+          			코스터디 로그인
         		</h2>
         		
         		<form class="ui large form" action="loginAction.do" method="post">

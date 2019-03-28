@@ -10,10 +10,10 @@
 		<br />
 		<br />
 	
-    	<div class="ui middle aligned center aligned grid" id="reigsterForm">
-      		<div class="column">
+    	<div class="ui middle aligned center aligned grid" id="authForm">
+      		<div class="column" id="authContent">
         		<h2 class="ui center aligned header">
-          			회원가입
+          			코스터디 회원가입
         		</h2>
         		
         		<form class="ui large form" action="registerAction.do" method="post">

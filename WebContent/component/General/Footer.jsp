@@ -6,11 +6,11 @@
 <title>Footer</title>
 </head>
 	<body>
-		<div class="ui inverted vertical footer segment" id="footer">
-      		<div class="ui center aligned container">
-        		<div class="ui stackable inverted divided grid">
+		<div class="ui inverted vertical footer segment" id="footerPage">
+      		<div class="ui center aligned container" id="footerContent">
+        		<div class="ui stackable inverted divided grid" id="footerMain">
         			<div class="ten wide column">
-		            	<h4 class="ui inverted header">코스터디 (CoStudy)</h4>
+		            	<h4 class="ui inverted header">코스터디 (Co-Study)</h4>
 			            
 			            <p>
 							이 사이트는 학부 프로젝트용으로 제작되었습니다.
@@ -19,7 +19,7 @@
         		
           			<div class="six wide column">
             			<h4 class="ui inverted header">사이트</h4>
-            			
+
             			<div class="ui inverted link list">
 			              	<a class="item" href="#contactPage">문의</a>
             			</div>

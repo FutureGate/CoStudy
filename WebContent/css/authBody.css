@@ -4,10 +4,10 @@ body {
 	-moz-font-smoothing: grayscale;
 }
 
-body > .ui.grid {
+#authForm {
   	height: 100%;
 }
 
-.column {
+#authContent {
   	max-width: 450px;
 }

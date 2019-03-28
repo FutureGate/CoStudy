@@ -1,12 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+	<link rel="stylesheet" href="./css/mainHeader.css">
+	<link rel="stylesheet" href="./css/footer.css">
+	<link rel="stylesheet" href="./css/chat.css">
+	
+	<title>코스터디 :: CoStudy</title>
 </head>
-<body>
 
-</body>
+<body>
+	<body id="root">
+    	<jsp:include page="./component/General/DefaultHeader.jsp"></jsp:include>
+    	
+    	<jsp:include page="./component/General/DashboardBody.jsp"></jsp:include>
+    
+    	<jsp:include page="./component/General/Footer.jsp"></jsp:include>
+    	
+    	<jsp:include page="./component/Chat/ChatBody.jsp"></jsp:include>
+	
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+		<script src="./js/defaultHeader.js"></script>
+		<script src="./js/chat.js"></script>
+	</body>
 </html>

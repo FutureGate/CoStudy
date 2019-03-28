@@ -47,7 +47,7 @@
 		<!-- 네비게이션 바 (상단고정) -->
 		<div class="ui top fixed inverted pointing menu" id="mainMenu">
       		<div class="ui container">
-	        	<a class="header item" href="index.jsp">
+	        	<a class="header item" href="#root">
 	          		<i class="pencil alternate icon"></i> 코스터디
 	        	</a>
         	

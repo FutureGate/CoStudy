@@ -28,7 +28,6 @@ public class FrontController extends HttpServlet {
 		actionDo(req, res);
 	}
 
-	
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		actionDo(req, res);
 	}
@@ -48,16 +47,22 @@ public class FrontController extends HttpServlet {
 		if(command.equals("/loginAction.do")) {
 			cmd = new UserLoginCommand();
 			cmd.execute(req, res);
-			viewPage = "dashboard.jsp";
+			
+			res.sendRedirect("dashboard.do");
 			
 		} else if(command.equals("/registerAction.do")) {
 			cmd = new UserRegisterCommand();
 			cmd.execute(req, res);
-			viewPage="index.jsp";
+
+			res.sendRedirect("index.jsp");
+		} else if(command.equals("/dashboard.do")) {
+			viewPage = "dashboard.jsp";
 		}
 		
-		// 페이지 포워딩
-		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-		dispatcher.forward(req, res);
+		if(viewPage != null) {
+			// 페이지 포워딩
+			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+			dispatcher.forward(req, res);
+		}
 	}
 }
