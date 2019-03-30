@@ -3,5 +3,7 @@
 		$("#btnChatToggle").click(function() {
 			$("#chatModal").modal('show');
 		});
+		
+		
 	});
 }(jQuery));

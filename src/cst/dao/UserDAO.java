@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
@@ -28,7 +29,7 @@ public class UserDAO {
 	}
 	
 	// 로그인
-	public int login(String userID, String userPassword) {
+	public int login(String userID, String userPassword, HttpServletRequest req) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
@@ -47,6 +48,11 @@ public class UserDAO {
 			if(rs.next()) {
 				if(rs.getString("userPassword").toString().equals(userPassword)) {
 					// 로그인 성공
+					
+					req.getSession().setAttribute("userID", userID);
+					req.getSession().setAttribute("userNick", rs.getString("userNick"));
+					req.getSession().setAttribute("userNick", rs.getString("userProfile"));
+					req.getSession().setAttribute("userNick", rs.getString("isCertificated"));
 					return 1;
 				}
 				
@@ -54,7 +60,7 @@ public class UserDAO {
 				return 2;
 			} else {
 				// 해당하는 아이디를 가진 회원이 존재하지 않음.
-				return 0;
+				return -1;
 			}
 			
 		} catch(Exception e) {
@@ -70,7 +76,7 @@ public class UserDAO {
 		}
 		
 		// DB 오류
-		return -1;
+		return -2;
 	}
 	
 	// 아이디 중복 체크

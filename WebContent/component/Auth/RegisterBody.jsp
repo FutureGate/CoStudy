@@ -16,7 +16,7 @@
           			코스터디 회원가입
         		</h2>
         		
-        		<form class="ui large form" action="registerAction.do" method="post">
+        		<form class="ui large form" action="userRegisterAction.do" method="post">
           			<div class="ui stacked segment">
           			
           				<div class="ui horizontal divider">

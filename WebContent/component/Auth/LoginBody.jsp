@@ -2,6 +2,7 @@
 <!DOCTYPE html >
 
 <head>
+
 <title>LoginBody</title>
 </head>
 	<body>
@@ -11,7 +12,7 @@
           			코스터디 로그인
         		</h2>
         		
-        		<form class="ui large form" action="loginAction.do" method="post">
+        		<form class="ui large form" action="userLoginAction.do" method="POST">
           			<div class="ui stacked segment">
             			<div class="field">
               				<div class="ui left icon input">

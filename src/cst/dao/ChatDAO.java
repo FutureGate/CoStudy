@@ -32,7 +32,7 @@ private DataSource ds = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "select * from chat where ((fromID = ? AND toID = ?) OR (fromID = ? AND to ID ?)) AND chatID > ? ORDER BY chatTime";
+		String sql = "select * from chat where ((fromID = ? AND toID = ?) OR (fromID = ? AND toID = ?)) AND chatID > ? ORDER BY chatTime";
 		
 		try {
 			conn = ds.getConnection();
@@ -90,7 +90,7 @@ private DataSource ds = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "select * from chat where ((fromID = ? AND toID = ?) OR (fromID = ? AND to ID ?)) AND chatID > (select MAX(chatID) - ? from chat) ORDER BY chatTime";
+		String sql = "select * from chat where ((fromID = ? AND toID = ?) OR (fromID = ? AND toID = ?)) AND chatID > (select MAX(chatID) -? from chat) ORDER BY chatTime";
 		
 		try {
 			conn = ds.getConnection();
@@ -148,7 +148,7 @@ private DataSource ds = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "insert into chat values (NULL, ?, ?, ?, NOW())";
+		String sql = "insert into chat values (NULL, ?, ?, ?, NOW(), 0)";
 		
 		try {
 			conn = ds.getConnection();
