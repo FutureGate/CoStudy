@@ -83,16 +83,7 @@
   				</div>
   			</div>
 		</div>
-		
-		<div class="ui mini modal" id="addUserModal">
-  			<div class="header">
-  				<div style="text-align: center;">
-  					메시지
-  				</div>
-			</div>
-				
-				dfasdfadasfafd
-		</div>
+
 		
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script>
