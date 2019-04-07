@@ -51,8 +51,8 @@ public class UserDAO {
 					
 					req.getSession().setAttribute("userID", userID);
 					req.getSession().setAttribute("userNick", rs.getString("userNick"));
-					req.getSession().setAttribute("userNick", rs.getString("userProfile"));
-					req.getSession().setAttribute("userNick", rs.getString("isCertificated"));
+					req.getSession().setAttribute("userProfile", rs.getString("userProfile"));
+					req.getSession().setAttribute("isCertificated", rs.getString("isCertificated"));
 					return 1;
 				}
 				

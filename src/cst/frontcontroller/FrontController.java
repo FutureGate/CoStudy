@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.command.auth.UserLoginCommand;
 import cst.command.auth.UserRegisterCommand;
+import cst.command.board.BoardListCommand;
+import cst.command.board.BoardWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
-import cst.dao.UserDAO;
 
 /**
  * Servlet implementation class FrontController
@@ -49,31 +50,95 @@ public class FrontController extends HttpServlet {
 		
 		String command = uri.substring(path.length());
 		
-		// 유저 로그인 (Ajax)
+		/*
+		 *  주의 사항
+		 * 
+		 * 	 포워딩이 아닐 시에는 viewPage를 절대경로로 지정해주어야 한다.
+		 * 
+		 */
+		
+		// 유저 로그인
 		if(command.equals("/userLoginAction.do")) {
 			cmd = new UserLoginCommand();
 			result = cmd.execute(req, res);
 			
 			if(result == 1) {
-				viewPage = "dashboard.jsp";
+				viewPage = "/CoStudy/dashboard.do";
 				isFowarding = false;
 			} else {
-				viewPage = "login.jsp";
+				viewPage = "/CoStudy/login.jsp";
 				isFowarding = false;
 			}
 			
-		// 유저 회원가입 (Ajax)
+		// 유저 회원가입
 		} else if(command.equals("/userRegisterAction.do")) {
 			cmd = new UserRegisterCommand();
 			cmd.execute(req, res);
 
-			viewPage = "index.jsp";
+			viewPage = "/CoStudy/index.jsp";
 			isFowarding = false;
+		
+			
+		// 로그아웃
+		} else if(command.equals("/user/logout.do")) {
+			req.getSession().invalidate();
+			
+			viewPage = "/CoStudy/index.jsp";
+			isFowarding = false;	
 		
 		// 대시보드 
 		} else if(command.equals("/dashboard.do")) {
 			
-			viewPage = "dashboard.jsp";
+			viewPage = "/dashboard.jsp";
+			isFowarding = true;
+		
+			
+		// 스터디 그룹 전체 보기
+		} else if(command.equals("/group/viewAll")) {
+			
+		
+			
+		// 게시판 목록 보기
+		} else if(command.equals("/bbs/list.do")) {
+			cmd = new BoardListCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/boardList.jsp";
+			isFowarding = true;
+			
+		// 게시물 작성 페이지
+		} else if(command.equals("/bbs/write.do")) {
+			viewPage = "/boardWrite.jsp";
+			isFowarding = true;
+		
+		// 게시물 작성
+		} else if(command.equals("/bbs/writeAction.do")) {
+			String bbsType = req.getParameter("bbsType");
+			
+			cmd = new BoardWriteCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			isFowarding = false;
+			
+		// 유저 프로필 보기
+		} else if(command.equals("/profile/viewProfile.do")) {
+			viewPage = "/viewProfile.jsp";
+			isFowarding = true;
+			
+			
+		// 유저 계정 설정
+		} else if(command.equals("/user/setting.do")) {
+			viewPage = "/setting.jsp";
+			isFowarding = true;
+		
+		// 주고받은 메시지 목록 페이지
+		} else if(command.equals("/chatList.do")) {
+			
+			
+		// 주고받은 메시지 목록 페이지
+		} else if(command.equals("/chat.do")) {
+			viewPage = "/chatView.jsp";
 			isFowarding = true;
 			
 		// 메시지 전송 (Ajax)
