@@ -1,13 +1,14 @@
 (function ($) {
   $(document).ready(function(){
-    
-	// hide .navbar first
+	alert("!!!");
 	$("#mainMenu").hide();
 	
-	// fade in .navbar
+	$("#mainMenuSidebar").sidebar("attach events", "#btnSidebarToggle");
+
+	
+	
 	$(function () {
 		$(window).scroll(function () {
-            // set distance user needs to scroll before we fadeIn navbar
 			if ($(this).scrollTop() > 200) {
 				$('#mainMenu').fadeIn();
 			} else {
@@ -18,5 +19,6 @@
 	
 	});
 
+	
 });
   }(jQuery));
