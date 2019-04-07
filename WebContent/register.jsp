@@ -3,6 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<%
+		if(request.getSession().getAttribute("userID") != null) {
+			response.sendRedirect("/CoStudy/dashboard.do");
+		}
+	%>
+	
 	<meta charset="UTF-8">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
