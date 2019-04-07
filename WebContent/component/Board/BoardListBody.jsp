@@ -1,3 +1,5 @@
+<%@page import="cst.dto.BoardDTO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"  %>
 <!DOCTYPE html >
@@ -5,6 +7,11 @@
 <%
 	String bbsType = request.getParameter("bbs");
 	String bbsName = null;
+	int pageNumber = 1;
+	
+	if(request.getParameter("pageNumber") != null) {
+		pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
+	}
 
 	if(bbsType.equals("free"))
 		bbsName = "자유게시판";
@@ -35,13 +42,16 @@
 						  		</tr>
 						  	</thead>
 						  	<tbody>
-						    	<tr>
-						      		<td>1</td>
-						      		<td>test</td>
-						      		<td>test</td>
-						      		<td>2011-11-11</td>
-						      		<td>24</td>
-						    	</tr>
+						    	
+						    		<c:forEach items="${boardList}" var="bbs">
+						    			<tr>
+							    			<td>${bbs.boardID}</td>
+							    			<td><a href="view.do?bbs=<%= bbsType %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
+							    			<td>${bbs.userNick}</td>
+							    			<td>${bbs.boardDate}</td>
+							    			<td>${bbs.boardHit}</td>
+							    		</tr>
+						    		</c:forEach>
 						  	</tbody>
 						  	<tfoot>
 						    	<tr>

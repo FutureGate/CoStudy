@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.command.auth.UserLoginCommand;
 import cst.command.auth.UserRegisterCommand;
+import cst.command.board.BoardListCommand;
 import cst.command.board.BoardWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
@@ -99,9 +100,11 @@ public class FrontController extends HttpServlet {
 			
 		// 게시판 목록 보기
 		} else if(command.equals("/bbs/list.do")) {
-			viewPage = "/boardView.jsp";
+			cmd = new BoardListCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/boardList.jsp";
 			isFowarding = true;
-		
 			
 		// 게시물 작성 페이지
 		} else if(command.equals("/bbs/write.do")) {

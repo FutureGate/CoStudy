@@ -3,7 +3,7 @@ package cst.dto;
 public class BoardDTO {
 	int boardID;
 	String userID;
-	String boardType;
+	String userNick;
 	String boardTitle;
 	String boardContent;
 	String boardDate;
@@ -11,7 +11,7 @@ public class BoardDTO {
 	int boardDelete;
 	
 	
-	public int getBoardID() {
+		public int getBoardID() {
 		return boardID;
 	}
 	public void setBoardID(int boardID) {
@@ -23,11 +23,11 @@ public class BoardDTO {
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
-	public String getBoardType() {
-		return boardType;
+	public String getUserNick() {
+		return userNick;
 	}
-	public void setBoardType(String boardType) {
-		this.boardType = boardType;
+	public void setUserNick(String userNick) {
+		this.userNick = userNick;
 	}
 	public String getBoardTitle() {
 		return boardTitle;

@@ -5,10 +5,11 @@
 	String bbsType = request.getParameter("bbs");
 	String bbsName = null;
 	String userID = (String) request.getSession().getAttribute("userID");
-
+	String userNick = (String) request.getSession().getAttribute("userNick");
+	
 	if(bbsType.equals("free"))
 		bbsName = "자유게시판";
-	else
+	else if(bbsType.equals("notice"))
 		bbsName = "공시사항";
 %>
 
@@ -34,6 +35,7 @@
 							    				<input type="text" name="boardTitle"></input>
 							    				<input type="hidden" name="bbsType" value="<%= bbsType %>"></input>
 							    				<input type="hidden" name="userID" value="<%= userID %>"></input>
+							    				<input type="hidden" name="userNick" value="<%= userNick %>"></input>
 							    			</div>
 							    		</th>
 							  		</tr>

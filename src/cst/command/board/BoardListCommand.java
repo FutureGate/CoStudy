@@ -20,19 +20,17 @@ public class BoardListCommand implements CstCommand {
 	@Override
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String userID = req.getParameter("userID");
-		String bbsType = req.getParameter("bbsType");
+		String bbsType = req.getParameter("bbs");
 		String boardTitle = req.getParameter("boardTitle");
 		int pageNumber = 1;
 		
-		
-		
 		if(req.getParameter("pageNumber") != null) {
-			pageNumber = Integer.parseInt(req.getParameter("boardContent"));
+			pageNumber = Integer.parseInt(req.getParameter("pageNumber"));
 		}
+
+		BoardDAO dao = new BoardDAO(bbsType);
 		
-		BoardDAO dao = new BoardDAO();
-		
-		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
+		ArrayList<BoardDTO> list = dao.getList(pageNumber);
 		
 		req.setAttribute("boardList", list);
 		req.setAttribute("boardNext", dao.nextPage(pageNumber));

@@ -14,32 +14,42 @@ import cst.dto.BoardDTO;
 public class BoardDAO {
 
 	private DataSource ds = null;
+	private String tableName = null;
 	
-	public BoardDAO() {
+	public BoardDAO(String bbsType) {
+		
+		if(bbsType.equals("notice")) {
+			tableName = "boardNotice";
+		} else if(bbsType.equals("free")) {
+			tableName = "boardFree";
+		}
+		
 		try {
 			InitialContext init = new InitialContext();
 			Context env = (Context) init.lookup("java:/comp/env");
 			ds = (DataSource) env.lookup("jdbc/CoStudy");
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public int write(String userID, String boardType, String boardTitle, String boardContent) {
+	public int write(String userID, String userNick, String bbsType, String boardTitle, String boardContent) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		ResultSet rs = null;
 		
-		String sql = "insert into board values (null, ?, ?, ?, ?, now(), 0, 0)";
+		String sql = "insert into " + tableName + " values (null, ?, ?, ?, ?, now(), 0, 0)";
 		
 		try {
 			conn = (Connection) ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, userID);
-			pstmt.setString(2, boardType);
+			pstmt.setString(2, userNick);
 			pstmt.setString(3, boardTitle);
 			pstmt.setString(4, boardContent);
 			
@@ -66,7 +76,7 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "select boardID from board order by boardID desc";
+		String sql = "select boardID from " + tableName + " order by boardID desc";
 		
 		try {
 			conn = (Connection) ds.getConnection();
@@ -101,7 +111,7 @@ public class BoardDAO {
 		
 		ResultSet rs = null;
 		
-		String sql = "select * from board where boardID < ? and boardDelete = 0 order by bbsID desc limit 10";
+		String sql = "select * from " + tableName +" where boardID < ? and boardDelete = 0 order by boardID desc limit 10";
 		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
 		
 		try {
@@ -117,7 +127,7 @@ public class BoardDAO {
 				
 				bbs.setBoardID(rs.getInt("boardID"));
 				bbs.setUserID(rs.getString("userID"));
-				bbs.setBoardType(rs.getString("boardType"));
+				bbs.setUserNick(rs.getString("userNick"));
 				bbs.setBoardTitle(rs.getString("boardTitle"));
 				bbs.setBoardContent(rs.getString("boardContent"));
 				bbs.setBoardDate(rs.getString("boardDate"));
@@ -149,7 +159,7 @@ public class BoardDAO {
 		
 		ResultSet rs = null;
 		
-		String sql = "select * from board where boardID < ? and boardDelete = 0 order by bbsID desc limit 10";
+		String sql = "select * from " + tableName +" where boardID < ? and boardDelete = 0 order by boardID desc limit 10";
 		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
 		
 		try {
