@@ -71,24 +71,39 @@ public class BoardDAO {
 		return -1;
 	}
 	
-	public int getNext() {
+	public BoardDTO getBoardByID(String boardID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "select boardID from " + tableName + " order by boardID desc";
+		BoardDTO board = new BoardDTO();
+		
+		String sql = "select * from " + tableName +" where boardID = ?";
 		
 		try {
 			conn = (Connection) ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
+			pstmt.setString(1, boardID);
+			
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				return rs.getInt(1) + 1;
+				
+				board.setBoardID(rs.getInt("boardID"));
+				board.setUserID(rs.getString("userID"));
+				board.setUserNick(rs.getString("userNick"));
+				board.setBoardTitle(rs.getString("boardTitle"));
+				board.setBoardContent(rs.getString("boardContent"));
+				board.setBoardDate(rs.getString("boardDate"));
+				board.setBoardHit(rs.getInt("boardHit"));
+				board.setBoardDelete(rs.getInt("boardDelete"));
+				
+				return board;
+			} else {
+				return null;
 			}
 			
-			return 1;
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -102,7 +117,7 @@ public class BoardDAO {
 		}
 		
 		// DB 오류
-		return -1;
+		return null;
 	}
 	
 	public ArrayList<BoardDTO> getList(int pageNumber) {
@@ -151,6 +166,40 @@ public class BoardDAO {
 		
 		// DB 오류
 		return list;
+	}
+	
+	public int getNext() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select boardID from " + tableName + " order by boardID desc";
+		
+		try {
+			conn = (Connection) ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				return rs.getInt(1) + 1;
+			}
+			
+			return 1;
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// DB 오류
+		return -1;
 	}
 	
 	public boolean nextPage(int pageNumber) {

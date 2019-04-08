@@ -1,17 +1,15 @@
 package cst.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
+import cst.dto.UserDTO;
 
 public class UserDAO {
 	
@@ -49,10 +47,19 @@ public class UserDAO {
 				if(rs.getString("userPassword").toString().equals(userPassword)) {
 					// 로그인 성공
 					
-					req.getSession().setAttribute("userID", userID);
-					req.getSession().setAttribute("userNick", rs.getString("userNick"));
-					req.getSession().setAttribute("userProfile", rs.getString("userProfile"));
-					req.getSession().setAttribute("isCertificated", rs.getString("isCertificated"));
+					UserDTO user = new UserDTO();
+					
+					user.setUserID(rs.getString("userID"));
+					user.setUserPassword(rs.getString("userPassword"));
+					user.setUserNick(rs.getString("userNick"));
+					user.setUserEmail(rs.getString("userEmail"));
+					user.setUserProfile(rs.getString("userProfile"));
+					user.setUserBorn(rs.getString("userBorn"));
+					user.setUserGender(rs.getString("userGender"));
+					user.setCertificated(rs.getBoolean("isCertificated"));
+					
+					req.getSession().setAttribute("user", user);
+					
 					return 1;
 				}
 				

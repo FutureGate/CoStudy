@@ -1,6 +1,6 @@
 (function ($) {
   $(document).ready(function(){
-	alert("!!!");
+
 	$("#mainMenu").hide();
 	
 	$("#mainMenuSidebar").sidebar("attach events", "#btnSidebarToggle");

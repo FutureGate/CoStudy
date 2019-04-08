@@ -1,17 +1,14 @@
+<%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html >
 
 <%
-	String userID = null;
-	String userNick = null;
-	String userProfile = null;
-	String isCertificated = null;
-	
-	if(request.getSession().getAttribute("userID") != null) {
-		userID = (String) request.getSession().getAttribute("userID");
-		userNick = (String) request.getSession().getAttribute("userNick");
-		userProfile = (String) request.getSession().getAttribute("userProfile");
-		isCertificated = (String) request.getSession().getAttribute("isCertificated");
+	UserDTO user = null;
+	String userNick = null;	
+
+	if(request.getSession().getAttribute("user") != null) {
+		user = (UserDTO) request.getSession().getAttribute("user");
+		userNick = user.getUserNick();
 	}
 
 %>
