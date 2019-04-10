@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.command.auth.UserLoginCommand;
 import cst.command.auth.UserRegisterCommand;
+import cst.command.board.BoardEditCommand;
 import cst.command.board.BoardListCommand;
+import cst.command.board.BoardViewCommand;
 import cst.command.board.BoardWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
@@ -105,12 +107,40 @@ public class FrontController extends HttpServlet {
 			
 			viewPage = "/boardList.jsp";
 			isFowarding = true;
+		
+		// 게시물 보기
+		} else if(command.equals("/bbs/view.do")) {
+			String bbsType = req.getParameter("bbsType");
 			
+			cmd = new BoardViewCommand();
+			result = cmd.execute(req, res);
+
+			// 삭제된 게시물
+			if(result < 0) {
+				// 오류처리
+				viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+				isFowarding = false;
+			} else {
+				viewPage = "/boardView.jsp";
+				isFowarding = true;
+			}
+			
+			
+		
 		// 게시물 작성 페이지
 		} else if(command.equals("/bbs/write.do")) {
 			viewPage = "/boardWrite.jsp";
 			isFowarding = true;
 		
+		// 게시물 수정
+		} else if(command.equals("/bbs/edit.do")) {
+			cmd = new BoardEditCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/boardEdit.jsp";
+			isFowarding = true;	
+				
+			
 		// 게시물 작성
 		} else if(command.equals("/bbs/writeAction.do")) {
 			String bbsType = req.getParameter("bbsType");

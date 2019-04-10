@@ -47,7 +47,7 @@
 						    			<tr>
 							    			<td>${bbs.boardID}</td>
 							    			<td><a href="view.do?bbs=<%= bbsType %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
-							    			<td>${bbs.userNick}</td>
+							    			<td>${bbs.userNick}</td>			
 							    			<td>${bbs.boardDate}</td>
 							    			<td>${bbs.boardHit}</td>
 							    		</tr>

@@ -4,7 +4,7 @@
 <html>
 <head>
 	<%
-		if(request.getSession().getAttribute("userID") == null) {
+		if(request.getSession().getAttribute("user") == null) {
 			response.sendRedirect("/CoStudy/index.jsp");
 		}
 	%>
