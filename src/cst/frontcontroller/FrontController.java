@@ -134,12 +134,21 @@ public class FrontController extends HttpServlet {
 		
 		// Edit article page
 		} else if(command.equals("/bbs/edit.do")) {
-			cmd = new BoardEditCommand();
+			cmd = new BoardViewCommand();
 			cmd.execute(req, res);
 			
 			viewPage = "/boardEdit.jsp";
-			isFowarding = true;	
-				
+			isFowarding = true;
+			
+		// Edit article page
+		} else if(command.equals("/bbs/editAction.do")) {
+			String bbsType = req.getParameter("bbsType");
+			
+			cmd = new BoardEditCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			isFowarding = true;
 			
 		// Write article action
 		} else if(command.equals("/bbs/writeAction.do")) {

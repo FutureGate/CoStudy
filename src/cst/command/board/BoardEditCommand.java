@@ -27,6 +27,7 @@ public class BoardEditCommand implements CstCommand {
 		
 		return dao.modify(userID, userNick, boardTitle, boardContent);
 
+		
 	}
 
 }
