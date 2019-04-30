@@ -8,7 +8,7 @@ public class UserDTO {
 	String userProfile = null;
 	String userBorn = null;
 	String userGender = null;
-	boolean isCertificated = false;
+	int isCertificated = 0;
 	
 	public String getUserID() {
 		return userID;
@@ -52,10 +52,10 @@ public class UserDTO {
 	public void setUserGender(String userGender) {
 		this.userGender = userGender;
 	}
-	public boolean isCertificated() {
+	public int isCertificated() {
 		return isCertificated;
 	}
-	public void setCertificated(boolean isCertificated) {
+	public void setCertificated(int isCertificated) {
 		this.isCertificated = isCertificated;
 	}
 }

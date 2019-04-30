@@ -17,6 +17,8 @@
 		bbsName = "자유게시판";
 	else
 		bbsName = "공시사항";
+	
+	int index = (pageNumber/5)*5+1;
 %>
 
 <head>
@@ -47,7 +49,7 @@
 						    			<tr>
 							    			<td>${bbs.boardID}</td>
 							    			<td><a href="view.do?bbs=<%= bbsType %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
-							    			<td>${bbs.userNick}</td>			
+							    			<td>${bbs.userNick}</td>
 							    			<td>${bbs.boardDate}</td>
 							    			<td>${bbs.boardHit}</td>
 							    		</tr>
@@ -58,14 +60,19 @@
 						      		<td class="center aligned" colspan="5">
 						      			<div class="ui pagination menu">
 									        
-									        <a class="icon item">
+									        <a class="icon item" href="list.do?bbs=<%= bbsType %>&pageNumber=<%= index-1 %>">
 									        	<i class="left chevron icon"></i>
 									        </a>
 									        
-									        <a class="item">1</a>
-									        <a class="item">2</a>
-									        <a class="item">3</a>
-									        <a class="item">4</a>
+									        <% 
+									        	for(int i=index; i<index+5; i++) {
+									        %>
+									        
+									        <a class="item" href="list.do?bbs=<%= bbsType %>&pageNumber=<%= i %>"><%= i %></a>
+									        
+									        <%
+									        	}
+									        %>
 									        
 									        <a class="icon item">
 									        	<i class="right chevron icon"></i>

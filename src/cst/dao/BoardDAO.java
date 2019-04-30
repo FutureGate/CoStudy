@@ -13,9 +13,12 @@ import javax.sql.DataSource;
 import org.bson.Document;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 
 import cst.dto.BoardDTO;
@@ -32,13 +35,15 @@ public class BoardDAO {
 	public BoardDAO(String bbsType) {
 		
 		if(bbsType.equals("notice")) {
-			collectionName = "boardNotice";
+			collectionName = "boardnotice";
 		} else if(bbsType.equals("free")) {
-			collectionName = "boardFree";
+			collectionName = "boardfree";
 		}
 		
 		try {
-			mongo = new MongoClient("localhost", 27017);
+			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:27017");
+			
+			mongo = new MongoClient(uri);
 			db = mongo.getDatabase("costudy");
 			collection = db.getCollection(collectionName);
 			
@@ -46,38 +51,17 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	public int getBoardID() {
-		try {
-			Document query = new Document();
-			
-			cur = collection.find().sort(Sorts.ascending("boardID")).iterator();
-			
-			if(cur.hasNext()) {
-				Document rs = cur.next();
-				
-				return rs.getInteger("boardID");
-			} else {
-				return 0;
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return 0;
-	}
-	
+
 	public int write(String userID, String userNick, String boardTitle, String boardContent) {
 		try {
 			Document query = new Document();
 			
-			query.append("boardID", getBoardID());
+			query.append("boardID", getLastBoardID()+1);
 			query.append("userID", userID);
 			query.append("userNick", userNick);
 			query.append("boardTitle", boardTitle);
 			query.append("boardContent", boardContent);
-			query.append("boardDate", new Date());
+			query.append("boardDate", new Date().toString());
 			query.append("boardHit", 0);
 			query.append("boardDelete", 0);
 			
@@ -98,16 +82,48 @@ public class BoardDAO {
 		return -1;
 	}
 	
+	public int modify(String boardID, String userNick, String boardTitle, String boardContent) {
+		try {
+			Document query = new Document();
+			
+			query.append("userNick", userNick);
+			query.append("boardTitle", boardTitle);
+			query.append("boardContent", boardContent);
+			query.append("boardDate", new Date().toString());
+			
+			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), query);
+			
+			return 1;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// DB Error
+		return -1;
+	}
+	
 	public BoardDTO getBoardByID(String boardID) {
 		try {
 			Document query = new Document();
 			
-			query.put("boardID", boardID);
+			query.append("boardID", Integer.parseInt(boardID));
+			
+			System.out.println(collectionName);
 			
 			cur = collection.find(query).iterator();
 			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
+				
+				System.out.println(rs);
 				
 				BoardDTO board = new BoardDTO();
 				
@@ -141,46 +157,39 @@ public class BoardDAO {
 	}
 	
 	public ArrayList<BoardDTO> getList(int pageNumber) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
 		
-		ResultSet rs = null;
-		
-		String sql = "select * from " + tableName +" where boardID < ? and boardDelete = 0 order by boardID desc limit 10";
 		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
 		
 		try {
-			Document 
-			
-			conn = (Connection) ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setInt(1, getNext() - (pageNumber - 1) * 10);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+			Document query = new Document();
+		
+			cur = collection.find(query).sort(Sorts.descending("boardID")).skip((pageNumber-1)*10).limit(10).iterator();
+
+			while(cur.hasNext()) {
+				
+				Document rs = cur.next();
+				
 				BoardDTO bbs = new BoardDTO();
 				
-				bbs.setBoardID(rs.getInt("boardID"));
+				bbs.setBoardID(rs.getInteger("boardID"));
 				bbs.setUserID(rs.getString("userID"));
 				bbs.setUserNick(rs.getString("userNick"));
 				bbs.setBoardTitle(rs.getString("boardTitle"));
 				bbs.setBoardContent(rs.getString("boardContent"));
 				bbs.setBoardDate(rs.getString("boardDate"));
-				bbs.setBoardHit(rs.getInt("boardHit"));
-				bbs.setBoardDelete(rs.getInt("boardDelete"));
+				bbs.setBoardHit(rs.getInteger("boardHit"));
+				bbs.setBoardDelete(rs.getInteger("boardDelete"));
 				
 				list.add(bbs);
+				
 			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -190,74 +199,24 @@ public class BoardDAO {
 		return list;
 	}
 	
-	public int getNext() {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		String sql = "select boardID from " + tableName + " order by boardID desc";
-		
+	public int getLastBoardID() {
 		try {
-			conn = (Connection) ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
+			Document query = new Document();
+
+			cur = collection.find().sort(Sorts.descending("boardID")).iterator();
 			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				return rs.getInt(1) + 1;
-			}
-			
-			return 1;
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		// DB Error
-		return -1;
-	}
-	
-	public boolean nextPage(int pageNumber) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		ResultSet rs = null;
-		
-		String sql = "select * from " + tableName +" where boardID < ? and boardDelete = 0 order by boardID desc limit 10";
-		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
-		
-		try {
-			conn = (Connection) ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setInt(1, getNext() - (pageNumber - 1) * 10);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				return true;
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				return rs.getInteger("boardID");
+			} else {
+				return 0;
 			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		
-		// DB Error
-		return false;
+		return 0;
 	}
 }

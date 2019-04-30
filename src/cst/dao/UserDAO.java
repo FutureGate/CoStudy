@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.bson.Document;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -24,7 +25,9 @@ public class UserDAO {
 	
 	public UserDAO() {
 		try {
-			mongo = new MongoClient("localhost", 27017);
+			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:27017");
+			
+			mongo = new MongoClient(uri);
 			db = mongo.getDatabase("costudy");
 			collection = db.getCollection("user");
 			
@@ -38,7 +41,7 @@ public class UserDAO {
 		try {
 			Document query = new Document();
 			
-			query.put("userID", userID);
+			query.append("userID", userID);
 			
 			cur = collection.find(query).iterator();
 			
@@ -57,7 +60,7 @@ public class UserDAO {
 					user.setUserProfile(rs.getString("userProfile"));
 					user.setUserBorn(rs.getString("userBorn"));
 					user.setUserGender(rs.getString("userGender"));
-					user.setCertificated(rs.getBoolean("isCertificated"));
+					user.setCertificated(rs.getInteger("isCertificated"));
 					
 					req.getSession().setAttribute("user", user);
 					
@@ -91,7 +94,7 @@ public class UserDAO {
 		try {
 			Document query = new Document();
 			
-			query.put("userID", userID);
+			query.append("userID", userID);
 			
 			cur = collection.find(query).iterator();
 			

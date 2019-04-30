@@ -110,8 +110,8 @@ public class FrontController extends HttpServlet {
 		
 		// View article
 		} else if(command.equals("/bbs/view.do")) {
-			String bbsType = req.getParameter("bbsType");
-			
+			String bbsType = req.getParameter("bbs");
+
 			cmd = new BoardViewCommand();
 			result = cmd.execute(req, res);
 

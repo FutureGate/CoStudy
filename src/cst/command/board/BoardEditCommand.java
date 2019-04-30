@@ -19,13 +19,13 @@ public class BoardEditCommand implements CstCommand {
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String userID = req.getParameter("userID");
 		String userNick = req.getParameter("userNick");
-		String bbsType = req.getParameter("bbsType");
+		String bbsType = req.getParameter("bbs");
 		String boardTitle = req.getParameter("boardTitle");
 		String boardContent = req.getParameter("boardContent");
 		
 		BoardDAO dao = new BoardDAO(bbsType);
 		
-		return dao.write(userID, userNick, bbsType, boardTitle, boardContent);
+		return dao.modify(userID, userNick, boardTitle, boardContent);
 
 	}
 

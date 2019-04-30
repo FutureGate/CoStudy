@@ -33,7 +33,6 @@ public class BoardListCommand implements CstCommand {
 		ArrayList<BoardDTO> list = dao.getList(pageNumber);
 		
 		req.setAttribute("boardList", list);
-		req.setAttribute("boardNext", dao.nextPage(pageNumber));
 		
 		return 1;
 
