@@ -38,7 +38,7 @@ public class FrontController extends HttpServlet {
 	}
 
 	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// 페이지 인코딩 UTF-8로 정의
+		// Set Encoding
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html;charset=UTF-8");
 		
@@ -53,13 +53,13 @@ public class FrontController extends HttpServlet {
 		String command = uri.substring(path.length());
 		
 		/*
-		 *  주의 사항
+		 *  Command
 		 * 
-		 * 	 포워딩이 아닐 시에는 viewPage를 절대경로로 지정해주어야 한다.
+		 * 	Route
 		 * 
 		 */
 		
-		// 유저 로그인
+		// User Login
 		if(command.equals("/userLoginAction.do")) {
 			cmd = new UserLoginCommand();
 			result = cmd.execute(req, res);
@@ -72,7 +72,7 @@ public class FrontController extends HttpServlet {
 				isFowarding = false;
 			}
 			
-		// 유저 회원가입
+		// User Register
 		} else if(command.equals("/userRegisterAction.do")) {
 			cmd = new UserRegisterCommand();
 			cmd.execute(req, res);
@@ -81,26 +81,26 @@ public class FrontController extends HttpServlet {
 			isFowarding = false;
 		
 			
-		// 로그아웃
+		// User Logout
 		} else if(command.equals("/user/logout.do")) {
 			req.getSession().invalidate();
 			
 			viewPage = "/CoStudy/index.jsp";
 			isFowarding = false;	
 		
-		// 대시보드 
+		// Dashboard Action
 		} else if(command.equals("/dashboard.do")) {
 			
 			viewPage = "/dashboard.jsp";
 			isFowarding = true;
 		
 			
-		// 스터디 그룹 전체 보기
+		// View All Group
 		} else if(command.equals("/group/viewAll")) {
 			
 		
 			
-		// 게시판 목록 보기
+		// Get Board List Action
 		} else if(command.equals("/bbs/list.do")) {
 			cmd = new BoardListCommand();
 			cmd.execute(req, res);
@@ -108,16 +108,16 @@ public class FrontController extends HttpServlet {
 			viewPage = "/boardList.jsp";
 			isFowarding = true;
 		
-		// 게시물 보기
+		// View article
 		} else if(command.equals("/bbs/view.do")) {
 			String bbsType = req.getParameter("bbsType");
 			
 			cmd = new BoardViewCommand();
 			result = cmd.execute(req, res);
 
-			// 삭제된 게시물
+			// if article is deleted
 			if(result < 0) {
-				// 오류처리
+				// go to list page
 				viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
 				isFowarding = false;
 			} else {
@@ -127,12 +127,12 @@ public class FrontController extends HttpServlet {
 			
 			
 		
-		// 게시물 작성 페이지
+		// Write article page
 		} else if(command.equals("/bbs/write.do")) {
 			viewPage = "/boardWrite.jsp";
 			isFowarding = true;
 		
-		// 게시물 수정
+		// Edit article page
 		} else if(command.equals("/bbs/edit.do")) {
 			cmd = new BoardEditCommand();
 			cmd.execute(req, res);
@@ -141,7 +141,7 @@ public class FrontController extends HttpServlet {
 			isFowarding = true;	
 				
 			
-		// 게시물 작성
+		// Write article action
 		} else if(command.equals("/bbs/writeAction.do")) {
 			String bbsType = req.getParameter("bbsType");
 			
@@ -151,33 +151,33 @@ public class FrontController extends HttpServlet {
 			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
 			isFowarding = false;
 			
-		// 유저 프로필 보기
+		// View profile page
 		} else if(command.equals("/profile/viewProfile.do")) {
 			viewPage = "/viewProfile.jsp";
 			isFowarding = true;
 			
 			
-		// 유저 계정 설정
+		// User Setting page
 		} else if(command.equals("/user/setting.do")) {
 			viewPage = "/setting.jsp";
 			isFowarding = true;
 		
-		// 주고받은 메시지 목록 페이지
+		// Chat list page
 		} else if(command.equals("/chatList.do")) {
 			
 			
-		// 주고받은 메시지 목록 페이지
+		// Chatting page
 		} else if(command.equals("/chat.do")) {
 			viewPage = "/chatView.jsp";
 			isFowarding = true;
 			
-		// 메시지 전송 (Ajax)
+		// Chat Send Action (Ajax)
 		} else if(command.equals("/chatSendAction.do")) {
 			
 			cmd = new ChatSendCommand();
 			cmd.execute(req, res);
 		
-		// 메시지 목록 읽기 (Ajax)
+		// Get Chat List Action (Ajax)
 		}  else if(command.equals("/chatListAction.do")) {
 			
 			cmd = new ChatListCommand();
@@ -186,9 +186,9 @@ public class FrontController extends HttpServlet {
 		
 		
 		if(viewPage != null) {
-			// 포워딩 여부 판단
+			// check isFowarding
 			if(isFowarding) {
-				// 페이지 포워딩
+				// do Fowarding
 				RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 				dispatcher.forward(req, res);
 			} else {

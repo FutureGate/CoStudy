@@ -25,7 +25,7 @@ public class BoardWriteCommand implements CstCommand {
 		
 		BoardDAO dao = new BoardDAO(bbsType);
 		
-		return dao.write(userID, userNick, bbsType, boardTitle, boardContent);
+		return dao.write(userID, userNick, boardTitle, boardContent);
 
 	}
 

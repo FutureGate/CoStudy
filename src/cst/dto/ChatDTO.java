@@ -6,7 +6,6 @@ public class ChatDTO {
 	String toID;
 	String chatContent;
 	String chatTime;
-	boolean isGroup;
 	
 	public int getChatID() {
 		return chatID;
@@ -38,12 +37,5 @@ public class ChatDTO {
 	public void setChatTime(String chatTime) {
 		this.chatTime = chatTime;
 	}
-	public boolean isGroup() {
-		return isGroup;
-	}
-	public void setGroup(boolean isGroup) {
-		this.isGroup = isGroup;
-	}
-	
 	
 }
