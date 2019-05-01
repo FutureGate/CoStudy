@@ -85,14 +85,45 @@ public class BoardDAO {
 	public int modify(String boardID, String userNick, String boardTitle, String boardContent) {
 		try {
 			Document query = new Document();
+			Document board = new Document();
+			Document update = null;
 			
-			query.append("userNick", userNick);
-			query.append("boardTitle", boardTitle);
-			query.append("boardContent", boardContent);
-			query.append("boardDate", new Date().toString());
+			query.append("boardID", Integer.parseInt(boardID));
 			
-			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), query);
+			board.append("userNick", userNick);
+			board.append("boardTitle", boardTitle);
+			board.append("boardContent", boardContent);
+			board.append("boardDate", new Date().toString());
 			
+			update = new Document("$set", board);
+			
+			collection.updateOne(query, update);
+
+			return 1;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// DB Error
+		return -1;
+	}
+	
+	public int delete(String boardID) {
+		try {
+			Document query = new Document();
+			
+			query.append("boardID", Integer.parseInt(boardID));
+			
+			collection.deleteOne(query);
+
 			return 1;
 			
 		} catch(Exception e) {
@@ -116,14 +147,10 @@ public class BoardDAO {
 			
 			query.append("boardID", Integer.parseInt(boardID));
 			
-			System.out.println(collectionName);
-			
 			cur = collection.find(query).iterator();
 			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
-				
-				System.out.println(rs);
 				
 				BoardDTO board = new BoardDTO();
 				

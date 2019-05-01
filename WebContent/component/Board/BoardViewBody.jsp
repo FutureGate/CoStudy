@@ -37,12 +37,6 @@
 		bbsName = "공시사항";
 %>
 
-<script>
-	$(function () {
-		
-	});
-</script>
-
 <title>BbsBody</title>
 </head>
 	<body>
@@ -83,8 +77,9 @@
 								if(userID != null && boardUserID != null) {	
 									if(userID.equals(boardUserID)) {
 							%>
-								<button class="ui red button" id="#deleteButton">수정</button>
+								
 								<a class="ui red button" href="edit.do?bbs=<%= bbsType %>&bbsID=<%= board.getBoardID() %>">수정</a>
+								<button class="ui red button" id="btnDelete">삭제</button>
 							<%
 									}
 								}
