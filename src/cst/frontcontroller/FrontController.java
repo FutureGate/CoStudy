@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.command.auth.UserLoginCommand;
 import cst.command.auth.UserRegisterCommand;
+import cst.command.board.BoardDeleteCommand;
 import cst.command.board.BoardEditCommand;
 import cst.command.board.BoardListCommand;
 import cst.command.board.BoardViewCommand;
@@ -148,7 +149,17 @@ public class FrontController extends HttpServlet {
 			cmd.execute(req, res);
 			
 			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
-			isFowarding = true;
+			isFowarding = false;
+			
+		// Edit article page
+		} else if(command.equals("/bbs/deleteAction.do")) {
+			String bbsType = req.getParameter("bbs");
+			
+			cmd = new BoardDeleteCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			isFowarding = false;
 			
 		// Write article action
 		} else if(command.equals("/bbs/writeAction.do")) {

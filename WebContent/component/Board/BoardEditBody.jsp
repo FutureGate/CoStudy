@@ -14,6 +14,11 @@
 	// 유저 정보
 	String userID = null;
 	String userNick = null;
+	String boardID = null;
+	
+	if(request.getParameter("bbsID") != null) {
+		boardID = request.getParameter("bbsID");
+	}
 	
 	
 	// 게시물 정보 받기
@@ -58,6 +63,7 @@
 							    				<input type="hidden" name="bbsType" value="<%= bbsType %>"></input>
 							    				<input type="hidden" name="userID" value="<%= userID %>"></input>
 							    				<input type="hidden" name="userNick" value="<%= userNick %>"></input>
+							    				<input type="hidden" name="boardID" value="<%= boardID %>"></input>
 							    			</div>
 							    		</th>
 							  		</tr>

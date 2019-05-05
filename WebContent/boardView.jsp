@@ -19,7 +19,10 @@
 	<link rel="stylesheet" href="/CoStudy/css/chat.css">
 	
 	<title>코스터디 :: CoStudy</title>
+	
 </head>
+
+
 
 <body>
 	<body id="root">
@@ -33,5 +36,22 @@
 		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 		<script src="/CoStudy/js/defaultHeader.js"></script>
 		<script src="/CoStudy/js/chat.js"></script>
+		
+		<script>
+			(function ($) {
+				$(document).ready(function() {
+					$("#btnDelete").click(function() {
+						var isDelete = confirm("삭제하시겠습니까?");
+						var bbsType = '<%= request.getParameter("bbs") %>';
+						var bbsID = '<%= request.getParameter("bbsID") %>';
+						if(isDelete == true) {
+							window.location.href = "/CoStudy/bbs/deleteAction.do?bbs=" + bbsType + "&bbsID=" + bbsID;
+						}
+					});
+				});
+			}(jQuery));
+		</script>
 	</body>
+	
+	
 </html>
