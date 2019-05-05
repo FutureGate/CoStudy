@@ -20,6 +20,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Updates;
 
 import cst.dto.BoardDTO;
 
@@ -122,10 +123,10 @@ public class BoardDAO {
 			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
-				
-				System.out.println(rs);
-				
+
 				BoardDTO board = new BoardDTO();
+				
+				doHit(boardID, rs.getInteger("boardHit"));
 				
 				board.setBoardID(rs.getInteger("boardID"));
 				board.setUserID(rs.getString("userID"));
@@ -133,8 +134,10 @@ public class BoardDAO {
 				board.setBoardTitle(rs.getString("boardTitle"));
 				board.setBoardContent(rs.getString("boardContent"));
 				board.setBoardDate(rs.getString("boardDate"));
-				board.setBoardHit(rs.getInteger("boardHit"));
+				board.setBoardHit(rs.getInteger("boardHit")+1);
 				board.setBoardDelete(rs.getInteger("boardDelete"));
+				
+				
 				
 				return board;
 			} else {
@@ -154,6 +157,28 @@ public class BoardDAO {
 		
 		// DB Error
 		return null;
+	}
+	
+	public int doHit(String boardID, int hit) {
+		try {
+			Document query = new Document();
+
+			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), Updates.set("boardHit", hit+1));
+
+			return 1;
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// DB Error
+		return -1;
 	}
 	
 	public ArrayList<BoardDTO> getList(int pageNumber) {

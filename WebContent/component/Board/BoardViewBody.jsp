@@ -73,6 +73,9 @@
 						    	<tr class="left aligned">
 					    			<td colspan="2"><%= board.getBoardContent() %></td>
 					    		</tr>
+					    		<tr class="center aligned">
+					    			안녕하세요 !!
+					    		</tr>
 						  	</tbody>
 						</table>
 						
