@@ -118,9 +118,9 @@ public class FrontController extends HttpServlet {
 		// ====================================
 		
 		// View All Group
-		if(command.equals("/group/viewAll")) {
-			
-		
+		if(command.equals("/group/viewAll.do")) {
+			viewPage = "/groupList.jsp";
+			isFowarding = true;
 		}
 			
 		
