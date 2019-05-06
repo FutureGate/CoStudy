@@ -53,12 +53,17 @@ public class FrontController extends HttpServlet {
 		
 		String command = uri.substring(path.length());
 		
-		/*
+		/* =====================================
 		 *  Command
 		 * 
 		 * 	Route
 		 * 
-		 */
+		 =======================================*/
+		
+		
+		// ====================================
+		// User Route
+		// ====================================
 		
 		// User Login
 		if(command.equals("/userLoginAction.do")) {
@@ -88,21 +93,47 @@ public class FrontController extends HttpServlet {
 			
 			viewPage = "/CoStudy/index.jsp";
 			isFowarding = false;	
+		}
 		
+		
+		
+		
+		// ====================================
+		// Dashboard Route
+		// ====================================
+			
 		// Dashboard Action
-		} else if(command.equals("/dashboard.do")) {
+		if(command.equals("/dashboard.do")) {
 			
 			viewPage = "/dashboard.jsp";
 			isFowarding = true;
 		
-			
+		}
+		
+		
+		
+		
+		// ====================================
+		// Group Route
+		// ====================================
+		
 		// View All Group
-		} else if(command.equals("/group/viewAll")) {
+		if(command.equals("/group/viewAll")) {
 			
 		
+		}
+			
+		
+		
+		
+		
+		
+		// ====================================
+		// Board Route
+		// ====================================	
 			
 		// Get Board List Action
-		} else if(command.equals("/bbs/list.do")) {
+		if(command.equals("/bbs/list.do")) {
 			cmd = new BoardListCommand();
 			cmd.execute(req, res);
 			
@@ -125,9 +156,7 @@ public class FrontController extends HttpServlet {
 				viewPage = "/boardView.jsp";
 				isFowarding = true;
 			}
-			
-			
-		
+
 		// Write article page
 		} else if(command.equals("/bbs/write.do")) {
 			viewPage = "/boardWrite.jsp";
@@ -170,9 +199,18 @@ public class FrontController extends HttpServlet {
 			
 			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
 			isFowarding = false;
+		}
+			
+			
+		
+		
+			
+		// ====================================
+		// User Settings Route
+		// ====================================	
 			
 		// View profile page
-		} else if(command.equals("/profile/viewProfile.do")) {
+		if(command.equals("/profile/viewProfile.do")) {
 			viewPage = "/viewProfile.jsp";
 			isFowarding = true;
 			
@@ -181,9 +219,20 @@ public class FrontController extends HttpServlet {
 		} else if(command.equals("/user/setting.do")) {
 			viewPage = "/setting.jsp";
 			isFowarding = true;
+		}
+		
+		
+		
+	
+		
+		
+		
+		// ====================================
+		// Chat Route
+		// ====================================
 		
 		// Chat list page
-		} else if(command.equals("/chatList.do")) {
+		if(command.equals("/chatList.do")) {
 			
 			
 		// Chatting page
@@ -205,6 +254,11 @@ public class FrontController extends HttpServlet {
 		}
 		
 		
+		
+		// ====================================
+		// Fowarding & Redirection
+		// ====================================
+
 		if(viewPage != null) {
 			// check isFowarding
 			if(isFowarding) {

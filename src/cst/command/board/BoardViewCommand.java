@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.dao.BoardDAO;
 import cst.dto.BoardDTO;
+import cst.dto.CommentDTO;
 
 public class BoardViewCommand implements CstCommand {
 

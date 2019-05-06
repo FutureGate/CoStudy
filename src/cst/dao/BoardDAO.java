@@ -23,6 +23,7 @@ import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 
 import cst.dto.BoardDTO;
+import cst.dto.CommentDTO;
 
 public class BoardDAO {
 
@@ -53,10 +54,143 @@ public class BoardDAO {
 		}
 	}
 
-	public int write(String userID, String userNick, String boardTitle, String boardContent) {
+	public ArrayList<BoardDTO> getBoardList(int pageNumber) {
+
+		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
+
 		try {
 			Document query = new Document();
 
+			cur = collection.find(query).sort(Sorts.descending("boardID")).skip((pageNumber-1)*10).limit(10).iterator();
+
+			while(cur.hasNext()) {
+
+				Document rs = cur.next();
+
+				BoardDTO bbs = new BoardDTO();
+
+				bbs.setBoardID(rs.getInteger("boardID"));
+				bbs.setUserID(rs.getString("userID"));
+				bbs.setUserNick(rs.getString("userNick"));
+				bbs.setBoardTitle(rs.getString("boardTitle"));
+				bbs.setBoardContent(rs.getString("boardContent"));
+				bbs.setBoardDate(rs.getString("boardDate"));
+				bbs.setBoardHit(rs.getInteger("boardHit"));
+				bbs.setBoardDelete(rs.getInteger("boardDelete"));
+
+				list.add(bbs);
+				
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return list;
+	}
+	
+	public BoardDTO getBoardByID(String boardID) {
+		try {
+			Document query = new Document();
+
+			query.append("boardID", Integer.parseInt(boardID));
+
+			cur = collection.find(query).iterator();
+
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				BoardDTO board = new BoardDTO();
+
+				doHit(boardID, rs.getInteger("boardHit"));
+
+				board.setBoardID(rs.getInteger("boardID"));
+				board.setUserID(rs.getString("userID"));
+				board.setUserNick(rs.getString("userNick"));
+				board.setBoardTitle(rs.getString("boardTitle"));
+				board.setBoardContent(rs.getString("boardContent"));
+				board.setBoardDate(rs.getString("boardDate"));
+				board.setBoardHit(rs.getInteger("boardHit")+1);
+				board.setBoardDelete(rs.getInteger("boardDelete"));
+
+
+
+				return board;
+			} else {
+				return null;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return null;
+	}
+
+	public int doHit(String boardID, int hit) {
+		try {
+			Document query = new Document();
+
+			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), Updates.set("boardHit", hit+1));
+
+			return 1;
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int getLastBoardID() {
+		try {
+			Document query = new Document();
+
+			cur = collection.find().sort(Sorts.descending("boardID")).iterator();
+
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				return rs.getInteger("boardID");
+			} else {
+				return 0;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+	
+	public int write(String userID, String userNick, String boardTitle, String boardContent) {
+		try {
+			Document query = new Document();
+			ArrayList<Document> comment = new ArrayList<Document>();
+			
 			query.append("boardID", getLastBoardID()+1);
 			query.append("userID", userID);
 			query.append("userNick", userNick);
@@ -65,6 +199,7 @@ public class BoardDAO {
 			query.append("boardDate", new Date().toString());
 			query.append("boardHit", 0);
 			query.append("boardDelete", 0);
+			query.append("comment", comment);
 
 			collection.insertOne(query);
 
@@ -141,101 +276,31 @@ public class BoardDAO {
 		// DB Error
 		return -1;
 	}
+	
+	public ArrayList<CommentDTO> getCommentList(String boardID) {
+		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 
-	public BoardDTO getBoardByID(String boardID) {
 		try {
 			Document query = new Document();
 
-			query.append("boardID", Integer.parseInt(boardID));
-
+			query.append("boardID", boardID);
+			
 			cur = collection.find(query).iterator();
-
+			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
+				ArrayList<Document> resultList =(ArrayList<Document>) rs.get("comment");
+				
+				for(Document result : resultList) {
+					CommentDTO comment = new CommentDTO();
 
-				BoardDTO board = new BoardDTO();
-
-				doHit(boardID, rs.getInteger("boardHit"));
-
-				board.setBoardID(rs.getInteger("boardID"));
-				board.setUserID(rs.getString("userID"));
-				board.setUserNick(rs.getString("userNick"));
-				board.setBoardTitle(rs.getString("boardTitle"));
-				board.setBoardContent(rs.getString("boardContent"));
-				board.setBoardDate(rs.getString("boardDate"));
-				board.setBoardHit(rs.getInteger("boardHit")+1);
-				board.setBoardDelete(rs.getInteger("boardDelete"));
-
-
-
-				return board;
-			} else {
-				return null;
-			}
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(cur != null) cur.close();
-				if(mongo != null) mongo.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		// DB Error
-		return null;
-	}
-
-	public int doHit(String boardID, int hit) {
-		try {
-			Document query = new Document();
-
-			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), Updates.set("boardHit", hit+1));
-
-			return 1;
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(cur != null) cur.close();
-				if(mongo != null) mongo.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		// DB Error
-		return -1;
-	}
-
-	public ArrayList<BoardDTO> getList(int pageNumber) {
-
-		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
-
-		try {
-			Document query = new Document();
-
-			cur = collection.find(query).sort(Sorts.descending("boardID")).skip((pageNumber-1)*10).limit(10).iterator();
-
-			while(cur.hasNext()) {
-
-				Document rs = cur.next();
-
-				BoardDTO bbs = new BoardDTO();
-
-				bbs.setBoardID(rs.getInteger("boardID"));
-				bbs.setUserID(rs.getString("userID"));
-				bbs.setUserNick(rs.getString("userNick"));
-				bbs.setBoardTitle(rs.getString("boardTitle"));
-				bbs.setBoardContent(rs.getString("boardContent"));
-				bbs.setBoardDate(rs.getString("boardDate"));
-				bbs.setBoardHit(rs.getInteger("boardHit"));
-				bbs.setBoardDelete(rs.getInteger("boardDelete"));
-
-				list.add(bbs);
-
+					comment.setUserID(result.getString("userID"));
+					comment.setUserNick(result.getString("userNick"));
+					comment.setCommentContent(result.getString("commentContent"));
+					comment.setCommentDate(result.getString("commentDate"));
+					
+					list.add(comment);
+				}
 			}
 
 		} catch(Exception e) {
@@ -253,24 +318,52 @@ public class BoardDAO {
 		return list;
 	}
 	
-	public int getLastBoardID() {
+	public int writeComment(String boardID, String userID, String userNick, String commentContent) {
 		try {
+			Document board = new Document();
 			Document query = new Document();
-
-			cur = collection.find().sort(Sorts.descending("boardID")).iterator();
-
+			Document comment = new Document();
+			Document update = null;
+			
+			comment.append("userID", userID);
+			comment.append("userNick", userNick);
+			comment.append("commentContent", commentContent);
+			comment.append("commentDate", new Date().toString());
+			
+			query.append("boardID", Integer.parseInt(boardID));
+			
+			ArrayList<Document> commentList = null;
+			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
+				
+				commentList = (ArrayList<Document>) rs.get("comment");
+				
+				commentList.add(comment);
+				
+				board.append("comment", commentList);
+				
+				update = new Document("$set", board);
 
-				return rs.getInteger("boardID");
+				collection.updateOne(query, update);
+
+				return 1;
 			} else {
-				return 0;
+				return -1;
 			}
 
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+				if(mongo != null) mongo.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
-		return 0;
+		// DB Error
+		return -1;
 	}
 }
