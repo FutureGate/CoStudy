@@ -17,8 +17,13 @@ import cst.command.board.BoardEditCommand;
 import cst.command.board.BoardListCommand;
 import cst.command.board.BoardViewCommand;
 import cst.command.board.BoardWriteCommand;
+import cst.command.board.comment.CommentDeleteCommand;
+import cst.command.board.comment.CommentListCommand;
+import cst.command.board.comment.CommentWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
+import cst.command.group.GroupCreateCommand;
+import cst.command.group.GroupViewCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -121,8 +126,32 @@ public class FrontController extends HttpServlet {
 		if(command.equals("/group/viewAll.do")) {
 			viewPage = "/groupList.jsp";
 			isFowarding = true;
-		}
 			
+			
+			
+		// View Group
+		} else if(command.equals("/group/view.do")) {
+			cmd = new GroupViewCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/groupView.jsp";
+			isFowarding = true;
+		
+		
+		// Create Group Page
+		} else if(command.equals("/group/createGroup.do")) {
+			viewPage = "/groupCreate.jsp";
+			isFowarding = true;
+			
+		// Create Group
+		} else if(command.equals("/group/createGroupAction.do")) {
+			cmd = new GroupCreateCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/group/viewAll.do";
+			isFowarding = false;
+			
+		}
 		
 		
 		
@@ -201,10 +230,35 @@ public class FrontController extends HttpServlet {
 			isFowarding = false;
 		}
 			
-			
 		
 		
+		
+		
+		
+		// ====================================
+		// Comment Route
+		// ====================================	
+		
+		// Write Comment Action (Ajax)
+		if(command.equals("/bbs/writeCommentAction.do")) {
+			cmd = new CommentWriteCommand();
+			cmd.execute(req, res);
 			
+		// Get Comment List (Ajax)
+		} else if(command.equals("/bbs/commentListAction.do")) {
+			cmd = new CommentListCommand();
+			cmd.execute(req, res);
+			
+		// Delete Comment (Ajax)
+		} else if(command.equals("/bbs/deleteCommentAction.do")) {
+			cmd = new CommentDeleteCommand();
+			cmd.execute(req, res);
+		}
+		
+		
+		
+		
+		
 		// ====================================
 		// User Settings Route
 		// ====================================	

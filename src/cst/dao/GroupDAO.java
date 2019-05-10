@@ -24,63 +24,46 @@ import com.mongodb.client.model.Updates;
 
 import cst.dto.BoardDTO;
 import cst.dto.CommentDTO;
+import cst.dto.GroupDTO;
 
-public class BoardDAO {
+public class GroupDAO {
 
 	private MongoClient mongo = null;
 	private MongoDatabase db = null;
 	private MongoCollection<Document> collection = null;
 	private MongoCursor<Document> cur = null;
 
-	private String collectionName = null;
-
-	public BoardDAO(String bbsType) {
-
-		if(bbsType.equals("notice")) {
-			collectionName = "boardnotice";
-		} else if(bbsType.equals("free")) {
-			collectionName = "boardfree";
-		}
-
+	public GroupDAO() {
 		try {
 			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:11082");
 
 			mongo = new MongoClient(uri);
 			db = mongo.getDatabase("costudy");
-			collection = db.getCollection(collectionName);
-
+			collection = db.getCollection("group");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	public ArrayList<BoardDTO> getBoardList(int pageNumber) {
-
-		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
-
+	
+	public int createGroup(String groupName, String groupMaster, String studyStart, String studyFinish, String studyLocation) {
 		try {
 			Document query = new Document();
-
-			cur = collection.find(query).sort(Sorts.descending("boardID")).skip((pageNumber-1)*10).limit(10).iterator();
-
-			while(cur.hasNext()) {
-
-				Document rs = cur.next();
-
-				BoardDTO bbs = new BoardDTO();
-
-				bbs.setBoardID(rs.getInteger("boardID"));
-				bbs.setUserID(rs.getString("userID"));
-				bbs.setUserNick(rs.getString("userNick"));
-				bbs.setBoardTitle(rs.getString("boardTitle"));
-				bbs.setBoardContent(rs.getString("boardContent"));
-				bbs.setBoardDate(rs.getString("boardDate"));
-				bbs.setBoardHit(rs.getInteger("boardHit"));
-				bbs.setBoardDelete(rs.getInteger("boardDelete"));
-
-				list.add(bbs);
-				
-			}
+			Document board = new Document();
+			ArrayList<String> registered = new ArrayList<String>();
+			
+			registered.add(groupMaster);
+			
+			query.append("groupName", groupName);
+			query.append("groupMaster", groupMaster);
+			query.append("studyStart", studyStart);
+			query.append("studyFinish", studyFinish);
+			query.append("studyLocation", studyLocation);
+			query.append("groupPop", 1);
+			query.append("board", board);
+			query.append("registered", registered);
+			
+			collection.insertOne(query);
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -93,36 +76,30 @@ public class BoardDAO {
 		}
 
 		// DB Error
-		return list;
+		return -1;
 	}
-	
-	public BoardDTO getBoardByID(String boardID) {
+
+	public GroupDTO getGroup(String groupName) {
 		try {
 			Document query = new Document();
 
-			query.append("boardID", Integer.parseInt(boardID));
-
+			query.append("groupName", groupName);
+			
 			cur = collection.find(query).iterator();
-
+			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
-
-				BoardDTO board = new BoardDTO();
-
-				doHit(boardID, rs.getInteger("boardHit"));
-
-				board.setBoardID(rs.getInteger("boardID"));
-				board.setUserID(rs.getString("userID"));
-				board.setUserNick(rs.getString("userNick"));
-				board.setBoardTitle(rs.getString("boardTitle"));
-				board.setBoardContent(rs.getString("boardContent"));
-				board.setBoardDate(rs.getString("boardDate"));
-				board.setBoardHit(rs.getInteger("boardHit")+1);
-				board.setBoardDelete(rs.getInteger("boardDelete"));
-
-
-
-				return board;
+				
+				GroupDTO group = new GroupDTO();
+				
+				group.setGroupName(rs.getString("groupName"));
+				group.setGroupMaster(rs.getString("groupMaster"));
+				group.setStudyStart(rs.getString("studyStart"));
+				group.setStudyFinish(rs.getString("studyFinish"));
+				group.setStudyLocation(rs.getString("studyLocation"));
+				group.setGroupPop(rs.getInteger("groupPop"));
+				
+				return group;
 			} else {
 				return null;
 			}
@@ -140,80 +117,7 @@ public class BoardDAO {
 		// DB Error
 		return null;
 	}
-
-	public int doHit(String boardID, int hit) {
-		try {
-			Document query = new Document();
-
-			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), Updates.set("boardHit", hit+1));
-
-			return 1;
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(cur != null) cur.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		// DB Error
-		return -1;
-	}
 	
-	public int getLastBoardID() {
-		try {
-			Document query = new Document();
-
-			cur = collection.find().sort(Sorts.descending("boardID")).iterator();
-
-			if(cur.hasNext()) {
-				Document rs = cur.next();
-
-				return rs.getInteger("boardID");
-			} else {
-				return 0;
-			}
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		return 0;
-	}
-	
-	public int write(String userID, String userNick, String boardTitle, String boardContent) {
-		try {
-			Document query = new Document();
-			ArrayList<Document> comment = new ArrayList<Document>();
-			
-			query.append("boardID", getLastBoardID()+1);
-			query.append("userID", userID);
-			query.append("userNick", userNick);
-			query.append("boardTitle", boardTitle);
-			query.append("boardContent", boardContent);
-			query.append("boardDate", new Date().toString());
-			query.append("boardHit", 0);
-			query.append("boardDelete", 0);
-			query.append("commentList", comment);
-
-			collection.insertOne(query);
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(cur != null) cur.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		// DB Error
-		return -1;
-	}
-
 	public int modify(String boardID, String userNick, String boardTitle, String boardContent) {
 		try {
 			Document query = new Document();

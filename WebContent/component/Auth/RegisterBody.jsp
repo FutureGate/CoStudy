@@ -9,6 +9,8 @@
 		<br />
 		<br />
 		<br />
+		<br />
+		<br />
 	
     	<div class="ui middle aligned center aligned grid" id="authForm">
       		<div class="column" id="authContent">

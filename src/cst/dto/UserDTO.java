@@ -1,6 +1,7 @@
 package cst.dto;
 
 public class UserDTO {
+	int userLevel = 0;
 	String userID = null;
 	String userPassword = null;
 	String userNick = null;
@@ -10,6 +11,12 @@ public class UserDTO {
 	String userGender = null;
 	int isCertificated = 0;
 	
+	public int getUserLevel() {
+		return userLevel;
+	}
+	public void setUserLevel(int userLevel) {
+		this.userLevel = userLevel;
+	}
 	public String getUserID() {
 		return userID;
 	}
@@ -52,10 +59,10 @@ public class UserDTO {
 	public void setUserGender(String userGender) {
 		this.userGender = userGender;
 	}
-	public int isCertificated() {
+	public int getIsCertificated() {
 		return isCertificated;
 	}
-	public void setCertificated(int isCertificated) {
+	public void setIsCertificated(int isCertificated) {
 		this.isCertificated = isCertificated;
 	}
 }

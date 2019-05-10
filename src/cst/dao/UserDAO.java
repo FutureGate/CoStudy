@@ -25,7 +25,7 @@ public class UserDAO {
 	
 	public UserDAO() {
 		try {
-			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:27017");
+			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:11082");
 			
 			mongo = new MongoClient(uri);
 			db = mongo.getDatabase("costudy");
@@ -53,6 +53,7 @@ public class UserDAO {
 					
 					UserDTO user = new UserDTO();
 					
+					user.setUserLevel(rs.getInteger("userLevel"));
 					user.setUserID(rs.getString("userID"));
 					user.setUserPassword(rs.getString("userPassword"));
 					user.setUserNick(rs.getString("userNick"));
@@ -60,7 +61,7 @@ public class UserDAO {
 					user.setUserProfile(rs.getString("userProfile"));
 					user.setUserBorn(rs.getString("userBorn"));
 					user.setUserGender(rs.getString("userGender"));
-					user.setCertificated(rs.getInteger("isCertificated"));
+					user.setIsCertificated(rs.getInteger("isCertificated"));
 					
 					req.getSession().setAttribute("user", user);
 					
@@ -125,6 +126,7 @@ public class UserDAO {
 		try {
 			Document query = new Document();
 			
+			query.append("userLevel", 0);
 			query.append("userID", userID);
 			query.append("userPassword", userPassword);
 			query.append("userNick", userNick);

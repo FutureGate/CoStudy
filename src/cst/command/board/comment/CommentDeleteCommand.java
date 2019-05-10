@@ -1,6 +1,7 @@
 package cst.command.board.comment;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +18,21 @@ public class CommentDeleteCommand implements CstCommand {
 
 	@Override
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		String boardID = req.getParameter("bbsID");
-		String bbsType = req.getParameter("bbs");
+		String commentID = req.getParameter("commentID");
+		String boardID = req.getParameter("boardID");
+		String bbsType = req.getParameter("bbsType");
 		
-		BoardDAO dao = new BoardDAO(bbsType);
-		
-		return dao.delete(boardID);
-
-		
+		if(commentID == null || commentID.equals("") || boardID == null || boardID.equals("") || bbsType == null || bbsType.equals("")) {
+			res.getWriter().write("0");
+			return 0;
+		} else {
+			commentID = URLDecoder.decode(commentID, "UTF-8");
+			boardID = URLDecoder.decode(boardID, "UTF-8");
+			bbsType = URLDecoder.decode(bbsType, "UTF-8");
+			
+			res.getWriter().write(new BoardDAO(bbsType).deleteComment(boardID, Integer.parseInt(commentID)));
+			return 1;
+		}
 	}
 
 }

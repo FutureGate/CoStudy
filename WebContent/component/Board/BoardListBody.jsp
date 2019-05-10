@@ -1,3 +1,4 @@
+<%@page import="cst.dto.UserDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -8,6 +9,14 @@
 	String bbsType = request.getParameter("bbs");
 	String bbsName = null;
 	int pageNumber = 1;
+	int userLevel = 0;
+	UserDTO user = null;
+	
+	if(session.getAttribute("user") != null) {
+		user = (UserDTO) session.getAttribute("user");
+		
+		userLevel = user.getUserLevel();
+	}
 	
 	if(request.getParameter("pageNumber") != null) {
 		pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
@@ -84,7 +93,16 @@
 						</table>
 						
 						<div style="text-align: right;">
-							<a class="ui red button" href="write.do?bbs=<%= bbsType %>">글쓰기</a>
+							<% if(bbsType == "notice") {
+									if(userLevel == 1) {
+							%>
+										<a class="ui red button" href="write.do?bbs=<%= bbsType %>">글쓰기</a>
+							<%
+									}
+								} else {
+							%>
+								<a class="ui red button" href="write.do?bbs=<%= bbsType %>">글쓰기</a>
+							<% } %>
 						</div>
 	            	</div>
           		</div>

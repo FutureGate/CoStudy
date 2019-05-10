@@ -1,11 +1,18 @@
 package cst.dto;
 
 public class CommentDTO {
+	int commentID;
 	String userID;
 	String userNick;
 	String commentContent;
 	String commentDate;
 	
+	public int getCommentID() {
+		return commentID;
+	}
+	public void setCommentID(int commentID) {
+		this.commentID = commentID;
+	}
 	public String getUserID() {
 		return userID;
 	}

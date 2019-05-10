@@ -8,25 +8,29 @@
 <head>
 
 <%
+	BoardDTO board = null;
+	UserDTO user = null;
+
 	String bbsType = request.getParameter("bbs");
 	String bbsName = null;
-	
-	BoardDTO board = null;
-	
-	UserDTO user = null;
+
 	String userID = null;
+	String userNick = null;
 	String boardUserID = null;
+	String boardID = null;
 	
 	if(session.getAttribute("user") != null) {
 		user = (UserDTO) session.getAttribute("user");
 		
 		userID = user.getUserID();
+		userNick = user.getUserNick();
 	}
 	
 	if(request.getAttribute("board") != null) {
 		board = (BoardDTO) request.getAttribute("board");
 		
 		boardUserID = board.getUserID();
+		boardID = Integer.toString(board.getBoardID());
 	} else {
 		return;
 	}
@@ -86,6 +90,10 @@
 							%>
 						</div>
 						
+						<br />
+						<br />
+						<h2 class="ui divider"></h2>
+						
 						<h5 class="left aligned">댓글</h5>
 						
 						<div class="ui form">
@@ -96,53 +104,46 @@
 			   						</div>
 			    				</div>
 			    				<div class="two wide center aligned column">
-			    					<button class="ui black button block"  id="btnCommentSend">전송</button>
+			    					<button class="ui black button block"  id="btnCommentWrite">작성</button>
 			    				</div>
 			  				</div>
 		  				</div>
 						
 						<!-- 댓글 표시 -->
-   						<table class="ui table center aligned">
-						 	<thead>
-						  	</thead>
-						  	<tbody>
-						    	<tr class="left aligned">
-						    		<td class="one wide">작성자</th>
-						    		<th class="nine wide"><%= board.getUserNick() %> (<%= board.getUserID() %>)</th>
-						    		<th class="one wide">작성일</th>
-					    		</tr>
-					    		<tr class="left aligned">
-					    			<td row-span="2"><%= board.getBoardContent() %></td>
-					    		</tr>
-						  	</tbody>
-						</table>
+						
+						<div class="ui middle aligned divided list" id="commentList">
+						</div>
 	            	</div>
           		</div>
         	</div>
       	</div>
       	
+      	
+      	
       	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<script>
-			var fromID = '<%= userID %>';
-			var toID;
+		<script>			
+			var userID = '<%= userID %>';
+			var userNick = '<%= userNick %>';
+			var commentContent;
+			var boardID = '<%= boardID %>';
+			var bbsType = '<%= bbsType %>';
 			var lastID = 0;
-			
-			function sendChat() {
-				fromID = '<%= userID %>';
-
-				var chatContent = $("#chatContent").val();
+		
+			function writeComment() {
+				commentContent = $("#commentContent").val();
 				
 				$.ajax({
 					type: "POST",
-					url: "chatSendAction.do",
+					url: "writeCommentAction.do",
 					data: {
-						fromID : encodeURIComponent(fromID),
-						toID : encodeURIComponent(toID),
-						chatContent : encodeURIComponent(chatContent)
+						userID : encodeURIComponent(userID),
+						userNick : encodeURIComponent(userNick),
+						commentContent : encodeURIComponent(commentContent),
+						boardID : encodeURIComponent(boardID),
+						bbsType : encodeURIComponent(bbsType)
 					},
 					dataType: "text",
 					success: function(result) {
-						console.log(result);
 						if(result == 1) {
 							//메시지 전송 성공
 						} else if(result == 0) {
@@ -153,24 +154,49 @@
 					}
 				});
 				
-				$("#chatContent").val('');
+				$("#commentContent").val('');
 			}
 			
-			
-			function chatListFunction() {
-				fromID = '<%= userID %>';
-				
+			function deleteComment(commentID) {
 				$.ajax({
-					url: "chatListAction.do",
+					type: "POST",
+					url: "deleteCommentAction.do",
+					data: {
+						commentID : encodeURIComponent(commentID),
+						boardID : encodeURIComponent(boardID),
+						bbsType : encodeURIComponent(bbsType)
+					},
+					dataType: "text",
+					success: function(result) {
+						if(result == 1) {
+							// 성공
+						} else if(result == 0) {
+							// 실패
+						} else {
+							// 예외 처리
+						}
+					},
+					complete: function () {
+						refresh();
+					}
+				});
+			}
+			
+			function refresh() {
+				$("#commentList").empty();
+				lastID = 0;
+			}
+			
+			function commentListFunction() {
+				$.ajax({
+					url: "commentListAction.do",
 					type: "POST",
 					data : {
-						fromID: encodeURIComponent(fromID),
-						toID: encodeURIComponent(toID),
+						bbsType: encodeURIComponent(bbsType),
+						boardID: encodeURIComponent(boardID),
 						lastID: encodeURIComponent(lastID)
 					},
 					success: function(data) {
-						console.log(data);
-						
 						if(data == "")
 						
 							return;
@@ -179,7 +205,7 @@
 						var result = jsonData.result;
 						
 						for(i=0; i<result.length; i++) {
-							addChat(result[i][0].value, result[i][2].value, result[i][3].value);
+							addComment(result[i][0].value, result[i][1].value, result[i][2].value, result[i][3].value, result[i][4].value);
 						}
 						
 						lastID = Number(jsonData.last);
@@ -187,58 +213,51 @@
 				});
 			}
 			
-			function addChat(chatName, chatContent, chatTime) {
+			function addComment(commentID, userID, userNick, CommentContent, commentDate) {
 				var currentUser = '<%= userID %>';
+				var userSection = '';
 				
-				if(currentUser == chatName) {
-					$("#chatList").append('<div class="item"' +
-							'<h5 style="text-align: right;">' + '나의 메시지</h5>' +
-							'<h5 style="text-align: right;">' + chatTime + '</h5>' +
-							'<h5 style="text-align: right;" class="header">' + chatContent + '</h5>' +
-							'</div>'
-					);
-				} else {
-					$("#chatList").append('<div class="item"' +
-							'<h5 style="text-align: left;">' + chatName  + '님의 메시지</h5>' +
-							'<h5 style="text-align: left;">' + chatTime + '</h5>' +
-							'<h5 style="text-align: left;" class="header">' + chatContent + '</h5>' +
-							'</div>'
-					);
+				if(currentUser == userID) {
+					userSection = '<button class="ui black button" id="btnCommentModify">수정</button>' +
+						'<button class="ui red button btnCommentDelete" commentId="' + commentID + '">삭제</button>';
 				}
 				
+				$("#commentList").append('<div class="item"' +
+						'<h5 style="text-align: right;">' + userNick +'(' + userID + ')</h5>' +
+						'<h5 style="text-align: right;">' + commentDate + '</h5>' +
+						'<h5 style="text-align: right;" class="header">' + CommentContent + '</h5>' +
+						userSection +
+						'</div>'
+				);
 				
+				$(".btnCommentDelete").unbind("click");
+				
+				$(".btnCommentDelete").click(function() {
+					var isDelete = confirm("삭제하시겠습니까?");
+					
+					targetID = $(this).attr("commentID");
+					
+					if(isDelete == true) {
+						deleteComment(targetID);
+					}
+				});
 			}
 			
-			function getRealtimeChat() {
+			function getRealtimeComment() {
 				setInterval(function() {
-					chatListFunction(lastID);
+					commentListFunction(lastID);
 				}, 1000);
 			}
 			
 			(function ($) {
 				$(document).ready(function() {
-					$(".chatItem").click(function() {
-						var selectedID = $(this).find(".chatUserNick").text();
-						$(this).addClass("active");
-						
-						$("#chatList").empty();
-						toID = selectedID;
-						lastID = 0;
-						chatListFunction();
-						
-						
-					});
-					
-					$(".addUserItem").click(function() {
-						$("#addUserModal")
-							.modal('show');
-					});
-					
 					$("#btnCommentWrite").click(function() {
 						writeComment();
 					});
 					
-					getRealtimeChat();
+					commentListFunction(lastID);
+					getRealtimeComment();
+
 				});
 			}(jQuery));
 		</script>

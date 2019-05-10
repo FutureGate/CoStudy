@@ -19,37 +19,37 @@
 		<br />
 		
 		<div class="ui container">
-			<div class="ui link cards">
-			  	<div class="card">
-			    	<div class="image">
-			      		<img src="./img/costudy_head.jpg">
-			    	</div>
-				    <div class="content">
-				    	<div class="header">
-				    		컴퓨터
-				    	</div>
-				    	
-			      		<div class="meta">
-			        		<a>서울특별시 강남구</a>
-			      		</div>
-			      		
-			      		<div class="description">
-			        		같이 공부해요~
-			      		</div>
-				    </div>
-			    
-				    <div class="extra content">
-				    	<span class="right floated">
-				        	09:00~10:00
-				      	</span>
-				      	
-				      	<span>
-				        	<i class="user icon"></i>
-				        		75 명
-				      	</span>
-				    </div>
+			<a class="ui animated red button" href="createGroup.do" tabindex="0">
+		  		<div class="visible content">
+		  			<i class="plus square icon"></i> 그룹 만들기
+		  		</div>
+		  		
+		  		<div class="hidden content">
+			    	<i class="right arrow icon"></i>
 			  	</div>
-			</div>
+			</a>
+		
+			<br />
+			<br />
+		
+			<a class="ui card" href="/CoStudy/group/view.do?groupname=asdf">
+			 	<div class="content">
+			    	<div class="header">Cute Dog</div>
+			    	<div class="meta">
+			      		<span class="category">Animals</span>
+			    	</div>
+			    	
+			    	<div class="description">
+			      		<p></p>
+			    	</div>
+			  	</div>
+			  	
+			  	<div class="extra content">
+			    	<div class="right floated author">
+			      		<img class="ui avatar image" src="../static/img/costudy_logo.jpg"> Matt
+			    	</div>
+			  	</div>
+			</a>
 		</div>
 		
 		<br />
