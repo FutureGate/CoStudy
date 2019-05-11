@@ -4,6 +4,6 @@ JSP/Servlet으로 작성된 MVC모델 디자인 패턴을 이용한 웹서비스
 <br />
 
 # 개요
-제목 : CoStudy<br />
-언어 : JSP<br />
+서비스 명 : CoStudy<br />
+작성 언어 : JSP<br />
 DB : MongoDB
