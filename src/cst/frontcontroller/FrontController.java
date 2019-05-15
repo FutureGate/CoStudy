@@ -24,6 +24,7 @@ import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
 import cst.command.group.GroupCreateCommand;
 import cst.command.group.GroupViewCommand;
+import cst.command.group.board.GroupBoardListCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -151,8 +152,74 @@ public class FrontController extends HttpServlet {
 			viewPage = "/CoStudy/group/viewAll.do";
 			isFowarding = false;
 			
-		}
+		// Get Board List Action
+		} else if(command.equals("/group/bbs/list.do")) {
+			cmd = new GroupBoardListCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/groupBoardList.jsp";
+			isFowarding = true;
 		
+		// View article
+		} else if(command.equals("/group/bbs/view.do")) {
+			String bbsType = req.getParameter("bbs");
+
+			cmd = new BoardViewCommand();
+			result = cmd.execute(req, res);
+
+			// if article is deleted
+			if(result < 0) {
+				// go to list page
+				viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+				isFowarding = false;
+			} else {
+				viewPage = "/boardView.jsp";
+				isFowarding = true;
+			}
+
+		// Write article page
+		} else if(command.equals("/group/bbs/write.do")) {
+			viewPage = "/boardWrite.jsp";
+			isFowarding = true;
+		
+		// Edit article page
+		} else if(command.equals("/group/bbs/edit.do")) {
+			cmd = new BoardViewCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/boardEdit.jsp";
+			isFowarding = true;
+			
+		// Edit article page
+		} else if(command.equals("/group/bbs/editAction.do")) {
+			String bbsType = req.getParameter("bbsType");
+			
+			cmd = new BoardEditCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			isFowarding = false;
+			
+		// Edit article page
+		} else if(command.equals("/group/bbs/deleteAction.do")) {
+			String bbsType = req.getParameter("bbs");
+			
+			cmd = new BoardDeleteCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			isFowarding = false;
+			
+		// Write article action
+		} else if(command.equals("/group/bbs/writeAction.do")) {
+			String bbsType = req.getParameter("bbsType");
+			
+			cmd = new BoardWriteCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			isFowarding = false;
+		}
 		
 		
 		

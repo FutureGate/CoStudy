@@ -1,4 +1,4 @@
-package cst.command.board;
+package cst.command.group.board;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import cst.dao.BoardDAO;
 import cst.dto.BoardDTO;
 import cst.dto.CommentDTO;
 
-public class BoardViewCommand implements CstCommand {
+public class GroupBoardViewCommand implements CstCommand {
 
-    public BoardViewCommand() {
+    public GroupBoardViewCommand() {
         super();
     }
 

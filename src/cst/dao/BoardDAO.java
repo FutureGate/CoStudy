@@ -96,6 +96,35 @@ public class BoardDAO {
 		return list;
 	}
 	
+	public boolean getIsNext(int pageNumber) {
+
+		try {
+			Document query = new Document();
+			
+			int currentPage = (pageNumber-1)*10;
+			int maxPage = (((pageNumber-1)/5) + 1)*5*10;
+			
+			cur = collection.find(query).sort(Sorts.descending("boardID")).skip(maxPage-currentPage).limit(10).iterator();
+			if(cur.hasNext()) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return false;
+	}
+	
 	public BoardDTO getBoardByID(String boardID) {
 		try {
 			Document query = new Document();

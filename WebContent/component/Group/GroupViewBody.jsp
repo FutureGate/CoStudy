@@ -7,9 +7,14 @@
 
 <%
 	GroupDTO group = null;
+	String groupName = null;
 
 	if(request.getAttribute("group") != null) {
 		group = (GroupDTO) request.getAttribute("group");
+	}
+	
+	if(request.getParameter("groupname") != null) {
+		groupName = (String) request.getParameter("groupname");
 	}
 %>
 
@@ -25,6 +30,16 @@
 		<br />
 		
 		<div class="ui container">
+			<div class="ui secondary pointing menu">
+  				<a class="item active">
+    				그룹 정보
+  				</a>
+		  		
+		  		<a class="item" href="/CoStudy/group/bbs/list.do?groupname=<%= groupName %>">
+		    		그룹 게시판
+		  		</a>
+			</div>
+
 			<%
 				if(group != null) {
 					System.out.println("!!!");
