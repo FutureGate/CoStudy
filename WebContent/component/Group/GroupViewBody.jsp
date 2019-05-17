@@ -42,7 +42,6 @@
 
 			<%
 				if(group != null) {
-					System.out.println("!!!");
 			%>
 				<h3><%= group.getGroupMaster() %></h3>
 				<h3><%= group.getGroupName() %></h3>

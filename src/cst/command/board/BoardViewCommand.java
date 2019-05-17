@@ -27,11 +27,11 @@ public class BoardViewCommand implements CstCommand {
 		
 		BoardDTO board = dao.getBoardByID(boardID);
 		
-		// ì¡´ì¬?•˜ì§? ?•Š?Š” ê²Œì‹œë¬¼ì¼ ê²½ìš°
+		// board not found
 		if(board  == null) {
 			return -2;
 			
-		// ê²Œì‹œë¬¼ì´ ?‚­? œ?˜?—ˆ?„ ê²½ìš°
+		// article had deleted ;
 		} else if(board.getBoardDelete() == 1) {
 			return -1;
 		}

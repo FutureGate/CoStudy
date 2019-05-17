@@ -24,7 +24,10 @@ import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
 import cst.command.group.GroupCreateCommand;
 import cst.command.group.GroupViewCommand;
+import cst.command.group.board.GroupBoardDeleteCommand;
 import cst.command.group.board.GroupBoardListCommand;
+import cst.command.group.board.GroupBoardViewCommand;
+import cst.command.group.board.GroupBoardWriteCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -162,32 +165,32 @@ public class FrontController extends HttpServlet {
 		
 		// View article
 		} else if(command.equals("/group/bbs/view.do")) {
-			String bbsType = req.getParameter("bbs");
+			String groupName = req.getParameter("groupname");
 
-			cmd = new BoardViewCommand();
+			cmd = new GroupBoardViewCommand();
 			result = cmd.execute(req, res);
 
 			// if article is deleted
 			if(result < 0) {
 				// go to list page
-				viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+				viewPage = "/CoStudy/group/bbs/list.do?bbs=" + groupName;
 				isFowarding = false;
 			} else {
-				viewPage = "/boardView.jsp";
+				viewPage = "/groupBoardView.jsp";
 				isFowarding = true;
 			}
 
 		// Write article page
 		} else if(command.equals("/group/bbs/write.do")) {
-			viewPage = "/boardWrite.jsp";
+			viewPage = "/groupBoardWrite.jsp";
 			isFowarding = true;
 		
 		// Edit article page
 		} else if(command.equals("/group/bbs/edit.do")) {
-			cmd = new BoardViewCommand();
+			cmd = new GroupBoardViewCommand();
 			cmd.execute(req, res);
 			
-			viewPage = "/boardEdit.jsp";
+			viewPage = "/groupBoardEdit.jsp";
 			isFowarding = true;
 			
 		// Edit article page
@@ -202,22 +205,22 @@ public class FrontController extends HttpServlet {
 			
 		// Edit article page
 		} else if(command.equals("/group/bbs/deleteAction.do")) {
-			String bbsType = req.getParameter("bbs");
+			String groupName = req.getParameter("groupname");
 			
-			cmd = new BoardDeleteCommand();
+			cmd = new GroupBoardDeleteCommand();
 			cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			viewPage = "/CoStudy/group/bbs/list.do?groupname=" + groupName;
 			isFowarding = false;
 			
 		// Write article action
 		} else if(command.equals("/group/bbs/writeAction.do")) {
-			String bbsType = req.getParameter("bbsType");
+			String groupName = req.getParameter("groupname");
 			
-			cmd = new BoardWriteCommand();
+			cmd = new GroupBoardWriteCommand();
 			cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			viewPage = "/CoStudy/group/bbs/list.do?groupname=" + groupName;
 			isFowarding = false;
 		}
 		

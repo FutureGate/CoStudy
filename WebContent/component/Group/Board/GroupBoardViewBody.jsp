@@ -11,8 +11,7 @@
 	BoardDTO board = null;
 	UserDTO user = null;
 
-	String bbsType = request.getParameter("bbs");
-	String bbsName = null;
+	String groupName = request.getParameter("groupname");
 
 	String userID = null;
 	String userNick = null;
@@ -34,11 +33,6 @@
 	} else {
 		return;
 	}
-	
-	if(bbsType.equals("free"))
-		bbsName = "자유게시판";
-	else
-		bbsName = "공시사항";
 %>
 
 <title>BbsBody</title>
@@ -48,8 +42,6 @@
         	<div class="ui middle aligned stackable grid container">
           		<div class="row">
 	            	<div class="fifteen wide column" style="text-align:center;">
-	            		
-	            		<h2 class="ui horizontal divider header"><%= bbsName %></h2>
 	            		
 	            		<!-- 게시판 표시 -->
    						<table class="ui red table center aligned">
@@ -75,14 +67,14 @@
 						</table>
 						
 						<div style="text-align: right;">
-							<a class="ui black button" href="list.do?bbs=<%= bbsType %>">목록</a>
+							<a class="ui black button" href="list.do?groupname=<%= groupName %>">목록</a>
 							
 							<%
 								if(userID != null && boardUserID != null) {	
 									if(userID.equals(boardUserID)) {
 							%>
 								
-								<a class="ui red button" href="edit.do?bbs=<%= bbsType %>&bbsID=<%= board.getBoardID() %>">수정</a>
+								<a class="ui red button" href="edit.do?groupname=<%= groupName %>&bbsID=<%= board.getBoardID() %>">수정</a>
 								<button class="ui red button" id="btnDelete">삭제</button>
 							<%
 									}
@@ -126,7 +118,7 @@
 			var userNick = '<%= userNick %>';
 			var commentContent;
 			var boardID = '<%= boardID %>';
-			var bbsType = '<%= bbsType %>';
+			var groupName = '<%= groupName %>';
 			var lastID = 0;
 		
 			function writeComment() {

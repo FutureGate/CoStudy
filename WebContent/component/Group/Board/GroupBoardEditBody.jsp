@@ -5,8 +5,7 @@
 
 <%
 	// 게시판 정보	
-	String bbsType = request.getParameter("bbs");
-	String bbsName = null;
+	String groupName = request.getParameter("groupname");
 	
 	// 게시물 정보 DTO
 	BoardDTO board = null;
@@ -33,11 +32,7 @@
 		userID = user.getUserID();
 		userNick = user.getUserNick();
 	}
-	
-	if(bbsType.equals("free"))
-		bbsName = "자유게시판";
-	else if(bbsType.equals("notice"))
-		bbsName = "공시사항";
+
 %>
 
 <head>
@@ -60,7 +55,7 @@
 							    		<th class="fifteen wide">
 							    			<div class="ui fluid input">
 							    				<input type="text" name="boardTitle" value="<%= board.getBoardTitle() %>"></input>
-							    				<input type="hidden" name="bbsType" value="<%= bbsType %>"></input>
+							    				<input type="hidden" name="groupname" value="<%= groupName %>"></input>
 							    				<input type="hidden" name="userID" value="<%= userID %>"></input>
 							    				<input type="hidden" name="userNick" value="<%= userNick %>"></input>
 							    				<input type="hidden" name="boardID" value="<%= boardID %>"></input>
@@ -80,8 +75,8 @@
 							</table>
 							
 							<div style="text-align: right;">
-								<a class="ui black button" href="list.do?bbs=<%= bbsType %>">목록</a>
-								<a class="ui black button" href="view.do?bbs=<%= bbsType %>&bbsID=<%= board.getBoardID() %>">취소</a>
+								<a class="ui black button" href="list.do?groupname=<%= groupName %>">목록</a>
+								<a class="ui black button" href="view.do?groupname=<%= groupName %>&bbsID=<%= board.getBoardID() %>">취소</a>
 								<input type="submit" class="ui red button" value="수정"></a>
 							</div>
 						</form>

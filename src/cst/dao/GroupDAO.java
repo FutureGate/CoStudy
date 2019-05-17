@@ -156,5 +156,211 @@ public class GroupDAO {
 		return null;
 	}
 	
+	public ArrayList<Document> getBoardList(String groupName) {
+		
+		ArrayList<Document> boardList = new ArrayList<Document>();
+		
+		try {
+			Document query = new Document();
+
+			query.append("groupName", groupName);
+			
+			cur = collection.find(query).iterator();
+
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				boardList = (ArrayList<Document>) rs.get("board");
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return boardList;
+	}
 	
+	public ArrayList<BoardDTO> getBoardListByPage(String groupName, int pageNumber) {
+
+		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
+
+		int count = 0;
+		int index = pageNumber;
+		
+		try {
+			Document query = new Document();
+
+			query.append("groupName", groupName);
+			
+			cur = collection.find(query).iterator();
+
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				ArrayList<Document> boardList = (ArrayList<Document>) rs.get("board");
+				
+				
+				for(Document board : boardList) {
+						BoardDTO bbs = new BoardDTO();
+	
+						bbs.setBoardID(board.getInteger("boardID"));
+						bbs.setUserID(board.getString("userID"));
+						bbs.setUserNick(board.getString("userNick"));
+						bbs.setBoardTitle(board.getString("boardTitle"));
+						bbs.setBoardContent(board.getString("boardContent"));
+						bbs.setBoardDate(board.getString("boardDate"));
+						bbs.setBoardHit(board.getInteger("boardHit"));
+						bbs.setBoardDelete(board.getInteger("boardDelete"));
+	
+						list.add(bbs);
+				}
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return list;
+	}
+	
+	public BoardDTO getBoardByID(String groupName, String boardID) {
+		try {
+			ArrayList<Document> boardList = getBoardList(groupName);
+			Document rs = findBoardByID(boardList, Integer.parseInt(boardID));
+			
+			if(rs != null) {
+				BoardDTO board = new BoardDTO();
+
+				doHit(boardID, rs.getInteger("boardHit"));
+
+				board.setBoardID(rs.getInteger("boardID"));
+				board.setUserID(rs.getString("userID"));
+				board.setUserNick(rs.getString("userNick"));
+				board.setBoardTitle(rs.getString("boardTitle"));
+				board.setBoardContent(rs.getString("boardContent"));
+				board.setBoardDate(rs.getString("boardDate"));
+				board.setBoardHit(rs.getInteger("boardHit")+1);
+				board.setBoardDelete(rs.getInteger("boardDelete"));
+				
+				return board;
+			} else {
+				return null;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return null;
+	}
+
+	public int doHit(String boardID, int hit) {
+		try {
+			Document query = new Document();
+
+			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), Updates.set("boardHit", hit+1));
+
+			return 1;
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public Document findBoardByID(ArrayList<Document> list, int boardID) {
+		for(Document board : list) {
+			if(board.getInteger("boardID") == boardID) {
+				return board;
+			}
+		}
+		
+		return null;
+	}
+	
+	public int write(String groupName, String userID, String userNick, String boardTitle, String boardContent) {
+		try {
+			Document query = new Document();
+			Document newBoard = new Document();
+			Document board = new Document();
+			Document update = null;
+
+			query.append("groupName", groupName);
+
+			ArrayList<Document> boardList = getBoardList(groupName);
+			
+			ArrayList<Document> comment = new ArrayList<Document>();
+			
+			newBoard.append("boardID", getLastBoardID(boardList)+1);
+			newBoard.append("userID", userID);
+			newBoard.append("userNick", userNick);
+			newBoard.append("boardTitle", boardTitle);
+			newBoard.append("boardContent", boardContent);
+			newBoard.append("boardDate", new Date().toString());
+			newBoard.append("boardHit", 0);
+			newBoard.append("boardDelete", 0);
+			newBoard.append("commentList", comment);
+			
+			boardList.add(newBoard);
+			
+			board.append("board", boardList);
+
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
+
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int getLastBoardID(ArrayList<Document> list) {
+		int result = 0;
+		
+		for(Document board : list) {
+			if(result < board.getInteger("boardID")) {
+				result = board.getInteger("boardID");
+			}
+		}
+		
+		return result;
+	}
 }

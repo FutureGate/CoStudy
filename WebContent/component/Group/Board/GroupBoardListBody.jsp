@@ -6,11 +6,11 @@
 <!DOCTYPE html >
 
 <%
-	String bbsType = request.getParameter("bbs");
-	String bbsName = null;
 	int pageNumber = 1;
 	int userLevel = 0;
+	
 	UserDTO user = null;
+	String groupName = null;
 	
 	if(session.getAttribute("user") != null) {
 		user = (UserDTO) session.getAttribute("user");
@@ -21,11 +21,10 @@
 	if(request.getParameter("pageNumber") != null) {
 		pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
 	}
-
-	if(bbsType.equals("free"))
-		bbsName = "자유게시판";
-	else
-		bbsName = "공시사항";
+	
+	if(request.getParameter("groupname") != null) {
+		groupName = request.getParameter("groupname");
+	}
 	
 	int index = (((pageNumber-1)/5) + 1)*5;
 	String isPrevClass = "";
@@ -39,7 +38,7 @@
 		isPrevClass = "disabled";
 		prevURL = "#";
 	} else {
-		prevURL = "list.do?bbs=" + bbsType + "&pageNumber=" + (index-5);
+		//prevURL = "list.do?bbs=" + bbsType + "&pageNumber=" + (index-5);
 	}
 	
 	if(request.getAttribute("isNext") != null) {
@@ -50,7 +49,7 @@
 		isNextClass = "disabled";
 		nextURL = "#";
 	} else {
-		nextURL = "list.do?bbs=" + bbsType + "&pageNumber=" + (index+1);
+		//nextURL = "list.do?bbs=" + bbsType + "&pageNumber=" + (index+1);
 	}
 %>
 
@@ -58,12 +57,13 @@
 <title>BbsBody</title>
 </head>
 	<body>
+		<jsp:include page="./GroupBoardHeader.jsp"></jsp:include>
+		
 		<div class="ui vertical stripe segment">
         	<div class="ui middle aligned stackable grid container">
+          		
           		<div class="row">
 	            	<div class="fifteen wide column" style="text-align:center;">
-	            		
-	            		<h2 class="ui horizontal divider header"><%= bbsName %></h2>
 	            		
 	            		<!-- 게시판 표시 -->
    						<table class="ui selectable red table center aligned">
@@ -81,7 +81,7 @@
 						    		<c:forEach items="${boardList}" var="bbs">
 						    			<tr>
 							    			<td>${bbs.boardID}</td>
-							    			<td><a href="view.do?bbs=<%= bbsType %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
+							    			<td><a href="view.do?groupname=<%= groupName %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
 							    			<td>${bbs.userNick}</td>
 							    			<td>${bbs.boardDate}</td>
 							    			<td>${bbs.boardHit}</td>
@@ -101,7 +101,7 @@
 									        	for(int i=index-4; i<=index; i++) {
 									        %>
 									        
-									        <a class="item" href="list.do?bbs=<%= bbsType %>&pageNumber=<%= i %>"><%= i %></a>
+									        <a class="item" href="list.do?bbs=&pageNumber=<%= i %>"><%= i %></a>
 									        
 									        <%
 									        	}
@@ -117,16 +117,7 @@
 						</table>
 						
 						<div style="text-align: right;">
-							<% if(bbsType == "notice") {
-									if(userLevel == 1) {
-							%>
-										<a class="ui red button" href="write.do?bbs=<%= bbsType %>">글쓰기</a>
-							<%
-									}
-								} else {
-							%>
-								<a class="ui red button" href="write.do?bbs=<%= bbsType %>">글쓰기</a>
-							<% } %>
+								<a class="ui red button" href="write.do?groupname=<%= groupName %>">글쓰기</a>
 						</div>
 	            	</div>
           		</div>

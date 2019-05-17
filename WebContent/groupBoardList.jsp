@@ -25,8 +25,6 @@
 	<body id="root">
     	<jsp:include page="./component/General/DashboardHeader.jsp"></jsp:include>
     	
-    	<jsp:include page="./component/Group/Board/GroupBoardHeader.jsp"></jsp:include>
-    	
     	<jsp:include page="./component/Group/Board/GroupBoardListBody.jsp"></jsp:include>
     
     	<jsp:include page="./component/General/Footer.jsp"></jsp:include>
