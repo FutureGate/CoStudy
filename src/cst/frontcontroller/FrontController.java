@@ -25,6 +25,7 @@ import cst.command.chat.ChatSendCommand;
 import cst.command.group.GroupCreateCommand;
 import cst.command.group.GroupViewCommand;
 import cst.command.group.board.GroupBoardDeleteCommand;
+import cst.command.group.board.GroupBoardEditCommand;
 import cst.command.group.board.GroupBoardListCommand;
 import cst.command.group.board.GroupBoardViewCommand;
 import cst.command.group.board.GroupBoardWriteCommand;
@@ -195,12 +196,12 @@ public class FrontController extends HttpServlet {
 			
 		// Edit article page
 		} else if(command.equals("/group/bbs/editAction.do")) {
-			String bbsType = req.getParameter("bbsType");
+			String groupName = req.getParameter("groupname");
 			
-			cmd = new BoardEditCommand();
+			cmd = new GroupBoardEditCommand();
 			cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/bbs/list.do?bbs=" + bbsType;
+			viewPage = "/CoStudy/group/bbs/list.do?groupname=" + groupName;
 			isFowarding = false;
 			
 		// Edit article page

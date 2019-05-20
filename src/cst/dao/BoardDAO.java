@@ -3,6 +3,7 @@ package cst.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -128,7 +129,7 @@ public class BoardDAO {
 	public BoardDTO getBoardByID(String boardID) {
 		try {
 			Document query = new Document();
-
+			
 			query.append("boardID", Integer.parseInt(boardID));
 
 			cur = collection.find(query).iterator();
@@ -216,13 +217,15 @@ public class BoardDAO {
 		try {
 			Document query = new Document();
 			ArrayList<Document> comment = new ArrayList<Document>();
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			
 			query.append("boardID", getLastBoardID()+1);
 			query.append("userID", userID);
 			query.append("userNick", userNick);
 			query.append("boardTitle", boardTitle);
 			query.append("boardContent", boardContent);
-			query.append("boardDate", new Date().toString());
+			query.append("boardDate", format.format(new Date()));
 			query.append("boardHit", 0);
 			query.append("boardDelete", 0);
 			query.append("commentList", comment);

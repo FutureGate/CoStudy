@@ -3,8 +3,10 @@ package cst.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.naming.Context;
@@ -171,6 +173,8 @@ public class GroupDAO {
 				Document rs = cur.next();
 
 				boardList = (ArrayList<Document>) rs.get("board");
+				
+				boardList = sortBoardList(boardList);
 			}
 
 		} catch(Exception e) {
@@ -206,6 +210,7 @@ public class GroupDAO {
 
 				ArrayList<Document> boardList = (ArrayList<Document>) rs.get("board");
 				
+				boardList = sortBoardList(boardList);
 				
 				for(Document board : boardList) {
 						BoardDTO bbs = new BoardDTO();
@@ -235,6 +240,22 @@ public class GroupDAO {
 
 		// DB Error
 		return list;
+	}
+	
+	public ArrayList<Document> sortBoardList(ArrayList<Document> boardList) {
+		boardList.sort(new Comparator<Document>() {
+			@Override
+			public int compare(Document arg0, Document arg1) {
+				int boardID0 = arg0.getInteger("boardID");
+				int boardID1 = arg1.getInteger("boardID");
+				
+				if(boardID0 == boardID1) return 0;
+				else if(boardID0 > boardID1) return -1;
+				else return 1;
+			}
+		});
+		
+		return boardList;
 	}
 	
 	public BoardDTO getBoardByID(String groupName, String boardID) {
@@ -311,7 +332,9 @@ public class GroupDAO {
 			Document newBoard = new Document();
 			Document board = new Document();
 			Document update = null;
-
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+			
 			query.append("groupName", groupName);
 
 			ArrayList<Document> boardList = getBoardList(groupName);
@@ -323,7 +346,7 @@ public class GroupDAO {
 			newBoard.append("userNick", userNick);
 			newBoard.append("boardTitle", boardTitle);
 			newBoard.append("boardContent", boardContent);
-			newBoard.append("boardDate", new Date().toString());
+			newBoard.append("boardDate", format.format(new Date()));
 			newBoard.append("boardHit", 0);
 			newBoard.append("boardDelete", 0);
 			newBoard.append("commentList", comment);
@@ -363,4 +386,104 @@ public class GroupDAO {
 		
 		return result;
 	}
+	
+	public int modify(String groupName, String boardID, String userNick, String boardTitle, String boardContent) {
+		try {
+			Document query = new Document();
+			Document newBoard = new Document();
+			Document board = new Document();
+			Document update = null;
+
+			int index = -1;
+			
+			query.append("groupName", groupName);
+
+			ArrayList<Document> boardList = getBoardList(groupName);
+			
+			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
+			
+			newBoard = boardList.get(index);
+			
+			newBoard.remove("userNick");
+			newBoard.remove("boardTitle");
+			newBoard.remove("boardContent");
+			
+			newBoard.append("userNick", userNick);
+			newBoard.append("boardTitle", boardTitle);
+			newBoard.append("boardContent", boardContent);
+			
+			boardList.set(index, newBoard);
+			
+			board.append("board", boardList);
+
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
+
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int findIndexByBoardID(ArrayList<Document> boardList, int boardID) {
+		int result = -1;
+		
+		for(Document board : boardList) {
+			if(board.getInteger("boardID") == boardID) {
+				result = boardList.indexOf(board);
+			}
+		}
+		
+		return result;
+	}
+	
+	public int delete(String groupName, String boardID) {
+		try {
+			Document query = new Document();
+			Document board = new Document();
+			Document update = null;
+
+			int index = -1;
+			
+			query.append("groupName", groupName);
+
+			ArrayList<Document> boardList = getBoardList(groupName);
+			
+			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
+			
+			boardList.remove(index);
+			
+			board.append("board", boardList);
+
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
+
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
 }

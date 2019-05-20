@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cst.command.CstCommand;
 import cst.dao.BoardDAO;
+import cst.dao.GroupDAO;
 
 public class GroupBoardEditCommand implements CstCommand {
 
@@ -20,13 +21,13 @@ public class GroupBoardEditCommand implements CstCommand {
 		String boardID = req.getParameter("boardID");
 		String userID = req.getParameter("userID");
 		String userNick = req.getParameter("userNick");
-		String bbsType = req.getParameter("bbsType");
+		String groupName = req.getParameter("groupname");
 		String boardTitle = req.getParameter("boardTitle");
 		String boardContent = req.getParameter("boardContent");
 		
-		BoardDAO dao = new BoardDAO(bbsType);
+		GroupDAO dao = new GroupDAO();
 		
-		return dao.modify(boardID, userNick, boardTitle, boardContent);
+		return dao.modify(groupName, boardID, userNick, boardTitle, boardContent);
 
 		
 	}

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cst.command.CstCommand;
 import cst.dao.BoardDAO;
+import cst.dao.GroupDAO;
 
 public class GroupBoardDeleteCommand implements CstCommand {
 
@@ -18,11 +19,11 @@ public class GroupBoardDeleteCommand implements CstCommand {
 	@Override
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String boardID = req.getParameter("bbsID");
-		String bbsType = req.getParameter("bbs");
+		String groupName = req.getParameter("groupname");
 		
-		BoardDAO dao = new BoardDAO(bbsType);
+		GroupDAO dao = new GroupDAO();
 		
-		return dao.delete(boardID);
+		return dao.delete(groupName, boardID);
 
 		
 	}

@@ -42,10 +42,10 @@
 				$(document).ready(function() {
 					$("#btnDelete").click(function() {
 						var isDelete = confirm("삭제하시겠습니까?");
-						var bbsType = '<%= request.getParameter("bbs") %>';
+						var groupName = '<%= request.getParameter("groupname") %>';
 						var bbsID = '<%= request.getParameter("bbsID") %>';
 						if(isDelete == true) {
-							window.location.href = "/CoStudy/bbs/deleteAction.do?bbs=" + bbsType + "&bbsID=" + bbsID;
+							window.location.href = "/CoStudy/group/bbs/deleteAction.do?groupname=" + groupName + "&bbsID=" + bbsID;
 						}
 					});
 				});
