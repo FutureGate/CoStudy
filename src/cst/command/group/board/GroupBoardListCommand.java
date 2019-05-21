@@ -31,9 +31,9 @@ public class GroupBoardListCommand implements CstCommand {
 		
 		ArrayList<BoardDTO> list = dao.getBoardListByPage(groupName, pageNumber);
 		
-		//boolean isNext = dao.getIsNext(pageNumber);
+		boolean isNext = dao.getIsNext(groupName, pageNumber);
 		
-		//req.setAttribute("isNext", isNext);
+		req.setAttribute("isNext", isNext);
 		req.setAttribute("boardList", list);
 		
 		return 1;

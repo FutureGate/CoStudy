@@ -27,7 +27,7 @@
 		 				그룹 정보
 					</a>
 		  		
-			  		<a class="item active">
+			  		<a class="item active" href="/CoStudy/group/bbs/list.do?groupname=<%= groupName %>">
 			    		그룹 게시판
 			  		</a>
 				</div>

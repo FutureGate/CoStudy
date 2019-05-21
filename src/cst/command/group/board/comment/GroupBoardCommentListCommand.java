@@ -1,4 +1,4 @@
-package cst.command.board.comment;
+package cst.command.group.board.comment;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.dao.BoardDAO;
 import cst.dao.ChatDAO;
+import cst.dao.GroupDAO;
 import cst.dto.BoardDTO;
 import cst.dto.ChatDTO;
 import cst.dto.CommentDTO;
 
-public class CommentListCommand implements CstCommand {
+public class GroupBoardCommentListCommand implements CstCommand {
 
-    public CommentListCommand() {
+    public GroupBoardCommentListCommand() {
         super();
     }
     
@@ -25,18 +26,18 @@ public class CommentListCommand implements CstCommand {
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 		String boardID = req.getParameter("boardID");
-		String bbsType = req.getParameter("bbsType");
+		String groupName = req.getParameter("groupname");
 		String lastID = req.getParameter("lastID");
 		
-		if(boardID == null || boardID.equals("") || bbsType == null || bbsType.equals("") || lastID == null || lastID.equals("")) {
+		if(boardID == null || boardID.equals("") || groupName == null || groupName.equals("") || lastID == null || lastID.equals("")) {
 			res.getWriter().write("");
 			return 0;
 		} else {
 			try {
 				boardID = URLDecoder.decode(boardID, "UTF-8");
-				bbsType = URLDecoder.decode(bbsType, "UTF-8");
+				groupName = URLDecoder.decode(groupName, "UTF-8");
 				
-				res.getWriter().write(getCommentList(boardID, bbsType, Integer.parseInt(lastID)));
+				res.getWriter().write(getCommentList(boardID, groupName, Integer.parseInt(lastID)));
 			} catch (Exception e) {
 				res.getWriter().write("");
 			}
@@ -44,12 +45,12 @@ public class CommentListCommand implements CstCommand {
 		}
     }
     
-    public String getCommentList(String boardID, String bbsType, int lastID) {
+    public String getCommentList(String boardID, String groupName, int lastID) {
 		StringBuffer result = new StringBuffer("");
 		result.append("{\"result\":[");
 		
-		BoardDAO dao = new BoardDAO(bbsType);
-		ArrayList<CommentDTO> commentList = dao.getCommentListByID(boardID, lastID);
+		GroupDAO dao = new GroupDAO();
+		ArrayList<CommentDTO> commentList = dao.getCommentListByID(groupName, boardID, lastID);
 		
 		if(commentList.size() == 0) return "";
 		

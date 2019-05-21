@@ -196,7 +196,8 @@ public class GroupDAO {
 		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
 
 		int count = 0;
-		int index = pageNumber;
+		int i = (pageNumber-1)*10;
+		int index = (pageNumber-1)*10;
 		
 		try {
 			Document query = new Document();
@@ -212,7 +213,15 @@ public class GroupDAO {
 				
 				boardList = sortBoardList(boardList);
 				
-				for(Document board : boardList) {
+				
+				while(i < boardList.size()) {
+
+					if(count == 10)
+						break;
+					
+					if(boardList.size() > i) {
+						Document board = boardList.get(i);
+					
 						BoardDTO bbs = new BoardDTO();
 	
 						bbs.setBoardID(board.getInteger("boardID"));
@@ -225,6 +234,11 @@ public class GroupDAO {
 						bbs.setBoardDelete(board.getInteger("boardDelete"));
 	
 						list.add(bbs);
+						
+						count++;
+					}
+					
+					i++;
 				}
 			}
 
@@ -241,6 +255,48 @@ public class GroupDAO {
 		// DB Error
 		return list;
 	}
+	
+	public boolean getIsNext(String groupName, int pageNumber) {
+
+		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
+
+		int i = ((((pageNumber-1)/5) + 1)*5)*10;
+		
+		try {
+			Document query = new Document();
+
+			query.append("groupName", groupName);
+			
+			cur = collection.find(query).iterator();
+
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				ArrayList<Document> boardList = (ArrayList<Document>) rs.get("board");
+				
+				boardList = sortBoardList(boardList);
+				
+				if(i > boardList.size()) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return false;
+	}
+	
 	
 	public ArrayList<Document> sortBoardList(ArrayList<Document> boardList) {
 		boardList.sort(new Comparator<Document>() {
@@ -266,7 +322,7 @@ public class GroupDAO {
 			if(rs != null) {
 				BoardDTO board = new BoardDTO();
 
-				doHit(boardID, rs.getInteger("boardHit"));
+				doHit(groupName, boardID, rs.getInteger("boardHit"));
 
 				board.setBoardID(rs.getInteger("boardID"));
 				board.setUserID(rs.getString("userID"));
@@ -295,13 +351,36 @@ public class GroupDAO {
 		return null;
 	}
 
-	public int doHit(String boardID, int hit) {
+	public int doHit(String groupName, String boardID, int hit) {
 		try {
 			Document query = new Document();
+			Document newBoard = new Document();
+			Document board = new Document();
+			Document update = null;
+		
+			int index = -1;
+			
+			query.append("groupName", groupName);
 
-			query = collection.findOneAndUpdate(Filters.eq("boardID", Integer.parseInt(boardID)), Updates.set("boardHit", hit+1));
+			ArrayList<Document> boardList = getBoardList(groupName);
+			
+			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
+			
+			newBoard = boardList.get(index);
+			
+			newBoard.remove("boardHit");
+			newBoard.append("boardHit", hit+1);
+						
+			boardList.set(index, newBoard);
+			
+			board.append("board", boardList);
+
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
 
 			return 1;
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -486,4 +565,180 @@ public class GroupDAO {
 		return -1;
 	}
 	
+	public ArrayList<CommentDTO> getCommentListByID(String groupName, String boardID, int lastID) {
+		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
+		
+		try {
+			Document query = new Document();
+			
+			query.append("groupName", groupName);
+			
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				ArrayList<Document> boardList =(ArrayList<Document>) rs.get("board");
+				
+				Document board = boardList.get(findIndexByBoardID(boardList, Integer.parseInt(boardID)));
+				
+				ArrayList<Document> commentList = (ArrayList<Document>) board.get("commentList");
+
+				for(Document result : commentList) {
+					if(result.getInteger("commentID") > lastID) {
+						CommentDTO comment = new CommentDTO();
+						
+						comment.setCommentID(result.getInteger("commentID"));
+						comment.setUserID(result.getString("userID"));
+						comment.setUserNick(result.getString("userNick"));
+						comment.setCommentContent(result.getString("commentContent"));
+						comment.setCommentDate(result.getString("commentDate"));
+						
+						list.add(comment);
+					}
+				}
+				
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return list;
+	}
+	
+	public int getLastCommentID(ArrayList<Document> commentList, String boardID) {
+		try {
+			if(commentList.size() == 0) {
+				return 1;
+			} else {
+				return (commentList.get(commentList.size()-1).getInteger("commentID")+1);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return 0;
+	}
+	
+	public int writeComment(String groupName, String boardID, String userID, String userNick, String commentContent) {
+		try {
+			Document newBoard = new Document();
+			Document board = new Document();
+			Document query = new Document();
+			Document comment = new Document();
+			Document update = null;
+			ArrayList<Document> commentList = null;
+			int index = -1;
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+			
+			query.append("groupName", groupName);
+			
+			ArrayList<Document> boardList = getBoardList(groupName);
+			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
+			newBoard = boardList.get(index);
+			
+			commentList = (ArrayList<Document>) boardList.get(index).get("commentList");
+			
+			comment.append("commentID", getLastCommentID(commentList, boardID));
+			comment.append("userID", userID);
+			comment.append("userNick", userNick);
+			comment.append("commentContent", commentContent);
+			comment.append("commentDate", format.format(new Date()));
+			
+			commentList.add(comment);
+			
+			boardList.set(index, newBoard);
+			
+			board.append("board", boardList);
+			
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int findIndexByCommentID(ArrayList<Document> commentList, int commentID) {
+		int result = -1;
+		
+		for(Document comment : commentList) {
+			if(comment.getInteger("commentID") == commentID) {
+				result = commentList.indexOf(comment);
+			}
+		}
+		
+		return result;
+	}
+	
+	public int deleteComment(String groupName, String boardID, int commentID) {
+		try {
+			Document newBoard = new Document();
+			Document board = new Document();
+			Document query = new Document();
+			Document comment = new Document();
+			Document update = null;
+			ArrayList<Document> commentList = null;
+			int index = -1;
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+			
+			query.append("groupName", groupName);
+			
+			ArrayList<Document> boardList = getBoardList(groupName);
+			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
+			newBoard = boardList.get(index);
+			
+			commentList = (ArrayList<Document>) boardList.get(index).get("commentList");
+			
+			commentList.remove(findIndexByCommentID(commentList, commentID));
+			
+			newBoard.remove("commentList");
+			newBoard.append("commentList", commentList);
+			
+			boardList.set(index, newBoard);
+			
+			board.append("board", boardList);
+			
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
 }

@@ -17,9 +17,9 @@ import cst.command.board.BoardEditCommand;
 import cst.command.board.BoardListCommand;
 import cst.command.board.BoardViewCommand;
 import cst.command.board.BoardWriteCommand;
-import cst.command.board.comment.CommentDeleteCommand;
-import cst.command.board.comment.CommentListCommand;
-import cst.command.board.comment.CommentWriteCommand;
+import cst.command.board.comment.BoardCommentDeleteCommand;
+import cst.command.board.comment.BoardCommentListCommand;
+import cst.command.board.comment.BoardCommentWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
 import cst.command.group.GroupCreateCommand;
@@ -29,6 +29,9 @@ import cst.command.group.board.GroupBoardEditCommand;
 import cst.command.group.board.GroupBoardListCommand;
 import cst.command.group.board.GroupBoardViewCommand;
 import cst.command.group.board.GroupBoardWriteCommand;
+import cst.command.group.board.comment.GroupBoardCommentDeleteCommand;
+import cst.command.group.board.comment.GroupBoardCommentListCommand;
+import cst.command.group.board.comment.GroupBoardCommentWriteCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -226,6 +229,26 @@ public class FrontController extends HttpServlet {
 		}
 		
 		
+		// ====================================
+		// Comment Route
+		// ====================================	
+		
+		// Write Comment Action (Ajax)
+		if(command.equals("/group/bbs/writeCommentAction.do")) {
+			cmd = new GroupBoardCommentWriteCommand();
+			cmd.execute(req, res);
+			
+		// Get Comment List (Ajax)
+		} else if(command.equals("/group/bbs/commentListAction.do")) {
+			cmd = new GroupBoardCommentListCommand();
+			cmd.execute(req, res);
+			
+		// Delete Comment (Ajax)
+		} else if(command.equals("/group/bbs/deleteCommentAction.do")) {
+			cmd = new GroupBoardCommentDeleteCommand();
+			cmd.execute(req, res);
+		}
+
 		
 		
 		// ====================================
@@ -312,17 +335,17 @@ public class FrontController extends HttpServlet {
 		
 		// Write Comment Action (Ajax)
 		if(command.equals("/bbs/writeCommentAction.do")) {
-			cmd = new CommentWriteCommand();
+			cmd = new BoardCommentWriteCommand();
 			cmd.execute(req, res);
 			
 		// Get Comment List (Ajax)
 		} else if(command.equals("/bbs/commentListAction.do")) {
-			cmd = new CommentListCommand();
+			cmd = new BoardCommentListCommand();
 			cmd.execute(req, res);
 			
 		// Delete Comment (Ajax)
 		} else if(command.equals("/bbs/deleteCommentAction.do")) {
-			cmd = new CommentDeleteCommand();
+			cmd = new BoardCommentDeleteCommand();
 			cmd.execute(req, res);
 		}
 		

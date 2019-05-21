@@ -38,6 +38,8 @@
 <title>BbsBody</title>
 </head>
 	<body>
+		<jsp:include page="./GroupBoardHeader.jsp"></jsp:include>
+	
 		<div class="ui vertical stripe segment">
         	<div class="ui middle aligned stackable grid container">
           		<div class="row">
@@ -132,7 +134,7 @@
 						userNick : encodeURIComponent(userNick),
 						commentContent : encodeURIComponent(commentContent),
 						boardID : encodeURIComponent(boardID),
-						bbsType : encodeURIComponent(bbsType)
+						groupname : encodeURIComponent(groupName)
 					},
 					dataType: "text",
 					success: function(result) {
@@ -156,7 +158,7 @@
 					data: {
 						commentID : encodeURIComponent(commentID),
 						boardID : encodeURIComponent(boardID),
-						bbsType : encodeURIComponent(bbsType)
+						groupname : encodeURIComponent(groupName)
 					},
 					dataType: "text",
 					success: function(result) {
@@ -184,7 +186,7 @@
 					url: "commentListAction.do",
 					type: "POST",
 					data : {
-						bbsType: encodeURIComponent(bbsType),
+						groupname: encodeURIComponent(groupName),
 						boardID: encodeURIComponent(boardID),
 						lastID: encodeURIComponent(lastID)
 					},

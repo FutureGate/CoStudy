@@ -39,13 +39,13 @@
 <title>BbsBody</title>
 </head>
 	<body>
+		<jsp:include page="./GroupBoardHeader.jsp"></jsp:include>
+	
 		<div class="ui vertical stripe segment">
         	<div class="ui middle aligned stackable grid container">
           		<div class="row">
 	            	<div class="fifteen wide column" style="text-align:center;">
-	            		
-	            		<h2 class="ui horizontal divider header">게시물 수정</h2>
-	            		
+	            	
 	            		<!-- 게시판 표시 -->
    						<form class="ui form" action="editAction.do" method="POST">
 	   						<table class="ui red table center aligned">

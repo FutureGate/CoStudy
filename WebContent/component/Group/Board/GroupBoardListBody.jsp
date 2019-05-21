@@ -38,7 +38,7 @@
 		isPrevClass = "disabled";
 		prevURL = "#";
 	} else {
-		//prevURL = "list.do?bbs=" + bbsType + "&pageNumber=" + (index-5);
+		prevURL = "list.do?groupname=" + groupName + "&pageNumber=" + (index-5);
 	}
 	
 	if(request.getAttribute("isNext") != null) {
@@ -49,7 +49,7 @@
 		isNextClass = "disabled";
 		nextURL = "#";
 	} else {
-		//nextURL = "list.do?bbs=" + bbsType + "&pageNumber=" + (index+1);
+		nextURL = "list.do?groupname=" + groupName + "&pageNumber=" + (index+1);
 	}
 %>
 
@@ -101,7 +101,7 @@
 									        	for(int i=index-4; i<=index; i++) {
 									        %>
 									        
-									        <a class="item" href="list.do?bbs=&pageNumber=<%= i %>"><%= i %></a>
+									        <a class="item" href="list.do?groupname=<%= groupName %>&pageNumber=<%= i %>"><%= i %></a>
 									        
 									        <%
 									        	}

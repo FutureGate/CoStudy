@@ -1,4 +1,4 @@
-package cst.command.board.comment;
+package cst.command.group.board.comment;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.dao.BoardDAO;
 import cst.dao.ChatDAO;
+import cst.dao.GroupDAO;
 
-public class CommentWriteCommand implements CstCommand {
+public class GroupBoardCommentWriteCommand implements CstCommand {
 
-    public CommentWriteCommand() {
+    public GroupBoardCommentWriteCommand() {
         super();
     }
 
@@ -23,7 +24,7 @@ public class CommentWriteCommand implements CstCommand {
 		String userNick = req.getParameter("userNick");
 		String commentContent = req.getParameter("commentContent");
 		String boardID = req.getParameter("boardID");
-		String bbsType = req.getParameter("bbsType");
+		String groupName = req.getParameter("groupname");
 		
 		if(userID == null || userID.equals("") || userNick == null || userNick.equals("") || commentContent == null || commentContent.equals("")) {
 			res.getWriter().write("0");
@@ -33,9 +34,9 @@ public class CommentWriteCommand implements CstCommand {
 			userNick = URLDecoder.decode(userNick, "UTF-8");
 			commentContent = URLDecoder.decode(commentContent, "UTF-8");
 			boardID = URLDecoder.decode(boardID, "UTF-8");
-			bbsType = URLDecoder.decode(bbsType, "UTF-8");
+			groupName = URLDecoder.decode(groupName, "UTF-8");
 			
-			res.getWriter().write(new BoardDAO(bbsType).writeComment(boardID, userID, userNick, commentContent));
+			res.getWriter().write(new GroupDAO().writeComment(groupName, boardID, userID, userNick, commentContent));
 			return 1;
 		}
 	}

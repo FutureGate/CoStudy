@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import cst.command.CstCommand;
 import cst.dao.BoardDAO;
 
-public class CommentEditCommand implements CstCommand {
+public class BoardCommentEditCommand implements CstCommand {
 
-    public CommentEditCommand() {
+    public BoardCommentEditCommand() {
         super();
     }
 
