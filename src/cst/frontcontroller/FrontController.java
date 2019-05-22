@@ -358,14 +358,14 @@ public class FrontController extends HttpServlet {
 		// ====================================	
 			
 		// View profile page
-		if(command.equals("/profile/viewProfile.do")) {
-			viewPage = "/viewProfile.jsp";
+		if(command.equals("/user/profile.do")) {
+			viewPage = "/profile.jsp";
 			isFowarding = true;
 			
 			
 		// User Setting page
-		} else if(command.equals("/user/setting.do")) {
-			viewPage = "/setting.jsp";
+		} else if(command.equals("/user/setting/default.do")) {
+			viewPage = "/defaultSetting.jsp";
 			isFowarding = true;
 		}
 		
