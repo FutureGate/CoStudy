@@ -123,11 +123,13 @@ public class GroupDAO {
 	}
 	
 	public ArrayList<GroupDTO> getGroupList() {
+		ArrayList<GroupDTO> groupList = new ArrayList<GroupDTO>();
+		
 		try {
 			
-			cur = collection.aggregate(Arrays.asList(Aggregates.sample(1))).iterator();
+			cur = collection.aggregate(Arrays.asList(Aggregates.sample(10))).iterator();
 			
-			if(cur.hasNext()) {
+			while(cur.hasNext()) {
 				Document rs = cur.next();
 				
 				GroupDTO group = new GroupDTO();
@@ -139,9 +141,7 @@ public class GroupDAO {
 				group.setStudyLocation(rs.getString("studyLocation"));
 				group.setGroupPop(rs.getInteger("groupPop"));
 				
-				return null;
-			} else {
-				return null;
+				groupList.add(group);
 			}
 
 		} catch(Exception e) {
@@ -155,7 +155,7 @@ public class GroupDAO {
 		}
 
 		// DB Error
-		return null;
+		return groupList;
 	}
 	
 	public ArrayList<Document> getBoardList(String groupName) {

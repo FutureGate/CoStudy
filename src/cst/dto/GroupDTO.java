@@ -1,13 +1,23 @@
 package cst.dto;
 
 public class GroupDTO {
+	String groupURL;
 	String groupName;
 	String groupMaster;
+	String groupProfile;
+	String groupAbout;
 	String studyStart;
 	String studyFinish;
 	String studyLocation;
 	int groupPop;
 	
+	
+	public String getGroupURL() {
+		return groupURL;
+	}
+	public void setGroupURL(String groupURL) {
+		this.groupURL = groupURL;
+	}
 	public String getGroupName() {
 		return groupName;
 	}
@@ -19,6 +29,18 @@ public class GroupDTO {
 	}
 	public void setGroupMaster(String groupMaster) {
 		this.groupMaster = groupMaster;
+	}
+	public String getGroupProfile() {
+		return groupProfile;
+	}
+	public void setGroupProfile(String groupProfile) {
+		this.groupProfile = groupProfile;
+	}
+	public String getGroupAbout() {
+		return groupAbout;
+	}
+	public void setGroupAbout(String groupAbout) {
+		this.groupAbout = groupAbout;
 	}
 	public String getStudyStart() {
 		return studyStart;

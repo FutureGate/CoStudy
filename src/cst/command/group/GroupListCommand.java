@@ -24,12 +24,12 @@ public class GroupListCommand implements CstCommand {
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		GroupDAO dao = new GroupDAO();
 		
-//		//ArrayList<GroupDTO> groupList = dao.getRandomGroup();
-//		
-//		if(groupList != null) {
-//			req.setAttribute("groupList", groupList);
-//		}
-//		
+		ArrayList<GroupDTO> groupList = dao.getGroupList();
+		
+		if(groupList != null) {
+			req.setAttribute("groupList", groupList);
+		}
+		
 		return 1;
 	}
 

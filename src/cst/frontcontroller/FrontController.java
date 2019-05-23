@@ -23,6 +23,7 @@ import cst.command.board.comment.BoardCommentWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
 import cst.command.group.GroupCreateCommand;
+import cst.command.group.GroupListCommand;
 import cst.command.group.GroupViewCommand;
 import cst.command.group.board.GroupBoardDeleteCommand;
 import cst.command.group.board.GroupBoardEditCommand;
@@ -132,6 +133,9 @@ public class FrontController extends HttpServlet {
 		
 		// View All Group
 		if(command.equals("/group/viewAll.do")) {
+			cmd = new GroupListCommand();
+			cmd.execute(req, res);
+			
 			viewPage = "/groupList.jsp";
 			isFowarding = true;
 			

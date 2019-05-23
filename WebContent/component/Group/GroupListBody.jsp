@@ -1,3 +1,4 @@
+<%@page import="cst.dto.GroupDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -5,6 +6,14 @@
 <!DOCTYPE html >
 
 <%
+	ArrayList<GroupDTO> groupList = null;
+	
+	if(request.getAttribute("groupList") != null) {
+		groupList = (ArrayList<GroupDTO>) request.getAttribute("groupList");
+		
+		System.out.println(groupList.size());
+	}
+
 %>
 
 <head>
@@ -32,24 +41,28 @@
 			<br />
 			<br />
 		
-			<a class="ui card" href="/CoStudy/group/view.do?groupname=asdf">
-			 	<div class="content">
-			    	<div class="header">Cute Dog</div>
-			    	<div class="meta">
-			      		<span class="category">Animals</span>
-			    	</div>
-			    	
-			    	<div class="description">
-			      		<p></p>
-			    	</div>
-			  	</div>
+			<c:forEach items="${groupList}" var="group">
+    			<a class="ui card" href="/CoStudy/group/view.do?groupname=${group.groupName}">
+				 	<div class="content">
+				    	<div class="header">${group.groupName}</div>
+				    	<div class="meta">
+				      		<span class="category">${group.groupMaster}</span>
+				    	</div>
+				    	
+				    	<div class="description">
+				      		<p></p>
+				    	</div>
+				  	</div>
 			  	
-			  	<div class="extra content">
-			    	<div class="right floated author">
-			      		<img class="ui avatar image" src="../static/img/costudy_logo.jpg"> Matt
-			    	</div>
-			  	</div>
-			</a>
+				  	<div class="extra content">
+				    	<div class="right floated author">
+				      		<img class="ui avatar image" src="../static/img/costudy_logo.jpg"> Matt
+				    	</div>
+				  	</div>
+				</a>
+    		</c:forEach>
+		
+			
 		</div>
 		
 		<br />
