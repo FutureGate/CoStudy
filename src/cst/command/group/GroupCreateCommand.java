@@ -22,8 +22,8 @@ public class GroupCreateCommand implements CstCommand {
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String groupName = req.getParameter("groupName");
 		String groupMaster = req.getParameter("groupMaster");
-		String studyStart = req.getParameter("studyStartHour") + ":" + req.getParameter("studyStartMin");
-		String studyFinish = req.getParameter("studyFinishHour") + ":" + req.getParameter("studyFinishMin");
+		String studyStart = req.getParameter("studyStart");
+		String studyFinish = req.getParameter("studyFinish");
 		String studyLocation = req.getParameter("studyLocation");
 		
 		GroupDAO dao = new GroupDAO();

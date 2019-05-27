@@ -38,6 +38,7 @@
 		
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-		<script src="../js/registerBody.js"></script>
+		<script src="/CoStudy/js/defaultHeader.js"></script>
+		<script src="/CoStudy/js/registerBody.js"></script>
 	</body>
 </html>

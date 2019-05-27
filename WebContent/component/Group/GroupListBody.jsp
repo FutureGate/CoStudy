@@ -11,7 +11,6 @@
 	if(request.getAttribute("groupList") != null) {
 		groupList = (ArrayList<GroupDTO>) request.getAttribute("groupList");
 		
-		System.out.println(groupList.size());
 	}
 
 %>
@@ -41,27 +40,28 @@
 			<br />
 			<br />
 		
-			<c:forEach items="${groupList}" var="group">
-    			<a class="ui card" href="/CoStudy/group/view.do?groupname=${group.groupName}">
-				 	<div class="content">
-				    	<div class="header">${group.groupName}</div>
-				    	<div class="meta">
-				      		<span class="category">${group.groupMaster}</span>
-				    	</div>
-				    	
-				    	<div class="description">
-				      		<p></p>
-				    	</div>
-				  	</div>
-			  	
-				  	<div class="extra content">
-				    	<div class="right floated author">
-				      		<img class="ui avatar image" src="../static/img/costudy_logo.jpg"> Matt
-				    	</div>
-				  	</div>
-				</a>
-    		</c:forEach>
-		
+			<div class="ui link cards">
+				<c:forEach items="${groupList}" var="group">
+	    			<a class="ui card" href="/CoStudy/group/view.do?groupname=${group.groupName}">
+					 	<div class="content">
+					    	<div class="header">${group.groupName}</div>
+					    	<div class="meta">
+					      		<span class="category">${group.groupMaster}</span>
+					    	</div>
+					    	
+					    	<div class="description">
+					      		<p></p>
+					    	</div>
+					  	</div>
+				  	
+					  	<div class="extra content">
+					    	<div class="right floated author">
+					      		<img class="ui avatar image" src="../static/img/costudy_logo.jpg"> Matt
+					    	</div>
+					  	</div>
+					</a>
+	    		</c:forEach>
+			</div>
 			
 		</div>
 		

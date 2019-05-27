@@ -14,10 +14,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-	<link rel="stylesheet" href="../css/authBody.css">
-	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="/CoStudy/css/authBody.css">
+	<link rel="stylesheet" href="/CoStudy/css/footer.css">
 	
-	<title>코스터디 :: CoStudy</title>
+	<title>코스터디 :: 회원가입</title>
 	
 	<style>
 		#btnLogin {
@@ -31,7 +31,7 @@
 	<body id="root">
 		<jsp:include page="./component/General/DashboardHeader.jsp"></jsp:include>
     	
-    	<jsp:include page="./component/Group/GroupCreateBody.jsp"></jsp:include>
+    	<jsp:include page="./component/User/UserBornSettingBody.jsp"></jsp:include>
     
     	<jsp:include page="./component/General/Footer.jsp"></jsp:include>
 	
@@ -40,14 +40,25 @@
 		<script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="  crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-		<script src="../js/registerBody.js"></script>
 		<script src="/CoStudy/js/defaultHeader.js"></script>
+		<script src="../js/registerBody.js"></script>
+		
 		<script>
 			(function ($) {
 				$(document).ready(function() {
-					$('.timepicker').calendar({
-						ampm: false,
-					  	type: 'time'
+					$('.datepicker').calendar({
+						monthFirst: false,
+						type:'date',
+						formatter: {
+							date: function (date, settings) {
+						      	if (!date) return '';
+						      	var day = date.getDate();
+						      	var month = date.getMonth() + 1;
+						      	var year = date.getFullYear();
+						      	
+						      	return year + '-' + month + '-' + day;
+						   	}
+						}
 					});
 				});
 			}(jQuery));

@@ -55,13 +55,14 @@
             			<div class="field">
             				<div class="ui equal width devided grid">
             					<div class="ui column">
-            						<input name="studyStartHour" placeholder="시" type="number" />
-            					</div>
-            					<div class="ui column">
-            						<input name="studyStartMin" placeholder="분" type="number" />
+		  							<div class="ui calendar timepicker">
+								    	<div class="ui input left icon">
+								      		<i class="time icon"></i>
+								      		<input type="text" name="studyStart" placeholder="스터디 시작 시간">
+								    	</div>
+								  	</div>
             					</div>
             				</div>
-              				
             			</div>
             			
             			<br />
@@ -73,10 +74,12 @@
             			<div class="field">
             				<div class="ui equal width devided grid">
             					<div class="ui column">
-            						<input name="studyFinishHour" placeholder="시" type="number" />
-            					</div>
-            					<div class="ui column">
-            						<input name="studyFinishMin" placeholder="분" type="number" />
+		  							<div class="ui calendar timepicker">
+								    	<div class="ui input left icon">
+								      		<i class="time icon"></i>
+								      		<input type="text" name="studyFinish" placeholder="스터디 종료 시간">
+								    	</div>
+								  	</div>
             					</div>
             				</div>
               				
@@ -111,5 +114,6 @@
 		<br />
 		<br />
 		<br />
+		
     </body>
 		

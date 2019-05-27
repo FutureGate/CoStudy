@@ -41,8 +41,8 @@
 				    	<i class="dropdown icon"></i>
 				    	
 				    	<div class="menu">
-				      		<a class="item" href="/CoStudy/profile/viewProfile.do">프로필</a>
-				      		<a class="item" href="/CoStudy/user/setting.do">계정 설정</a>
+				      		<a class="item" href="/CoStudy/user/profile.do">프로필</a>
+				      		<a class="item" href="/CoStudy/user/nicknameSetting.do">계정 설정</a>
 				      		<a class="item" href="/CoStudy/user/logout.do">로그아웃</a>
 				    	</div>
             		</div>

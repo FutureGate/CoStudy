@@ -127,7 +127,7 @@ public class GroupDAO {
 		
 		try {
 			
-			cur = collection.aggregate(Arrays.asList(Aggregates.sample(10))).iterator();
+			cur = collection.aggregate(Arrays.asList(Aggregates.sample(12))).iterator();
 			
 			while(cur.hasNext()) {
 				Document rs = cur.next();
