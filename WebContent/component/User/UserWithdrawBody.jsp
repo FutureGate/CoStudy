@@ -39,22 +39,8 @@
         		
         		<form class="ui large form" action="nicknameSettingAction.do" method="post">
           			<div class="ui stacked segment">
-          			
-          				<div class="ui horizontal divider">
-            				회원 탈퇴
-            			</div>
-            			<div class="field">
-              				<div class="ui left icon input">
-                				<i class="address card icon"></i>
-                				
-                				<input name="userNickname" placeholder="닉네임" type="text" />
-              				</div>
-            			</div>
             
-            			<br />
-            			<div class="ui divider"></div>
-            
-            			<input type="submit" class="ui fluid large red submit button" value="수정"></input>
+            			<input type="button" id="btnDelete" class="ui fluid large red button" value="탈퇴하기"></input>
         			</div>
           			
           			<div class="ui error message"></div>
@@ -66,5 +52,21 @@
 		<br />
 		<br />
 		<br />
+		
+		
+		<div class="ui modal" id="deleteModal">
+			<div class="header">
+				회원 탈퇴
+			</div>
+	  		
+	  		<div class="content">
+	    		탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+			</div>
+			  
+		  	<div class="actions">
+		  		<button class="ui red button yes ok">네</button>
+		    	<button class="ui black button no ok">아니오</button>
+  			</div>
+		</div>
     </body>
 		

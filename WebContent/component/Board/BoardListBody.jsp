@@ -117,7 +117,8 @@
 						</table>
 						
 						<div style="text-align: right;">
-							<% if(bbsType == "notice") {
+							<% 
+								if(bbsType.equals("notice")) {
 									if(userLevel == 1) {
 							%>
 										<a class="ui red button" href="write.do?bbs=<%= bbsType %>">글쓰기</a>

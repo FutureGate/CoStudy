@@ -1,5 +1,17 @@
+<%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html >
+
+<%
+	String userNick = null;
+	UserDTO user = null;
+	
+	if(request.getSession().getAttribute("user") != null) {
+		user = (UserDTO) request.getSession().getAttribute("user");
+		
+		userNick = user.getUserNick();
+	}
+%>
 
 <head>
 <title>RegisterBody</title>
@@ -37,7 +49,7 @@
           			닉네임 수정
         		</h2>
         		
-        		<form class="ui large form" action="nicknameSettingAction.do" method="post">
+        		<form class="ui large form" action="userNickSettingAction.do" method="post">
           			<div class="ui stacked segment">
           			
           				<div class="ui horizontal divider">
@@ -47,7 +59,8 @@
               				<div class="ui left icon input">
                 				<i class="address card icon"></i>
                 				
-                				<input name="userNickname" placeholder="닉네임" type="text" />
+                				<input name="userID" type="hidden" value="<%= user.getUserID() %>"/>
+                				<input name="userNick" placeholder="닉네임" type="text"  value="<%= userNick %>"/>
               				</div>
             			</div>
             

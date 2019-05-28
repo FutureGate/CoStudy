@@ -33,6 +33,10 @@ import cst.command.group.board.GroupBoardWriteCommand;
 import cst.command.group.board.comment.GroupBoardCommentDeleteCommand;
 import cst.command.group.board.comment.GroupBoardCommentListCommand;
 import cst.command.group.board.comment.GroupBoardCommentWriteCommand;
+import cst.command.user.UserBornSettingCommand;
+import cst.command.user.UserNickSettingCommand;
+import cst.command.user.UserPasswordSettingCommand;
+import cst.command.user.UserWithdrawCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -367,19 +371,60 @@ public class FrontController extends HttpServlet {
 			isFowarding = true;
 			
 			
-		// User Setting page
+		// User Nickname Setting Page
 		} else if(command.equals("/user/nicknameSetting.do")) {
 			viewPage = "/userNicknameSetting.jsp";
 			isFowarding = true;
+			
+		// User Password Setting Page
 		} else if(command.equals("/user/passwordSetting.do")) {
 			viewPage = "/userPasswordSetting.jsp";
 			isFowarding = true;
+			
+		// User Born Setting Page
 		} else if(command.equals("/user/bornSetting.do")) {
 			viewPage = "/userBornSetting.jsp";
 			isFowarding = true;
+			
+		// User Born Setting Page
 		} else if(command.equals("/user/withdraw.do")) {
 			viewPage = "/userWithdraw.jsp";
 			isFowarding = true;
+				
+			
+		// User Nick Setting Action
+		} else if(command.equals("/user/userNickSettingAction.do")) {
+			cmd = new UserNickSettingCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/user/nicknameSetting.do";
+			isFowarding = false;
+			
+		// User Password Setting Action
+		} else if(command.equals("/user/userPasswordSettingAction.do")) {
+			cmd = new UserPasswordSettingCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/user/passwordSetting.do";
+			isFowarding = false;
+			
+		// User Born Setting Action
+		} else if(command.equals("/user/userBornSettingAction.do")) {
+			cmd = new UserBornSettingCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/user/bornSetting.do";
+			isFowarding = false;
+			
+		// User Unregister Setting Action
+		} else if(command.equals("/user/userWithdrawAction.do")) {
+			cmd = new UserWithdrawCommand();
+			cmd.execute(req, res);
+			
+			req.getSession().invalidate();
+			
+			viewPage = "/CoStudy/index.jsp";
+			isFowarding = false;
 		}
 		
 		

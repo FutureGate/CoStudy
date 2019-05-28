@@ -1,5 +1,14 @@
+<%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html >
+
+<%
+		UserDTO user = null;
+	
+		if(request.getSession().getAttribute("user") != null) {
+			user = (UserDTO) request.getSession().getAttribute("user");
+		}
+%>
 
 <head>
 <title>RegisterBody</title>
@@ -34,21 +43,22 @@
     	<div class="ui middle aligned center aligned grid" id="authForm">
       		<div class="column" id="authContent">
         		<h2 class="ui center aligned header">
-          			비밀번호 수정
+          			생년월일 수정
         		</h2>
         		
-        		<form class="ui large form" action="nicknameSettingAction.do" method="post">
+        		<form class="ui large form" action="userBornSettingAction.do" method="post">
           			<div class="ui stacked segment">
           			
           				<div class="ui horizontal divider">
-            				생년월일 수정
+            				생년월일
             			</div>
             			<div class="field">
             				<div class="ui calendar datepicker">
 							    <div class="ui left icon input">
 							    	<i class="address card icon"></i>
                 				
-                					<input name="userBorn" placeholder="생년월일" type="text" />
+                					<input name="userID" type="hidden" value="<%= user.getUserID() %>"/>
+                					<input id="userBornInput" name="userBorn" placeholder="생년월일" type="text"/>
 							    </div>
 							</div>
             			</div>

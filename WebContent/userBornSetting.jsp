@@ -1,9 +1,20 @@
+<%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 	<%
+		String userBorn = null;
+		UserDTO user = null;
+	
+		if(request.getSession().getAttribute("user") != null) {
+			user = (UserDTO) request.getSession().getAttribute("user");
+			
+			userBorn = user.getUserBorn();
+		}
+
+	
 		if(request.getSession().getAttribute("user") == null) {
 			response.sendRedirect("/CoStudy/index.jsp");
 		}
@@ -44,6 +55,8 @@
 		<script src="../js/registerBody.js"></script>
 		
 		<script>
+			var userBorn = '<%= userBorn %>';
+		
 			(function ($) {
 				$(document).ready(function() {
 					$('.datepicker').calendar({
@@ -51,7 +64,7 @@
 						type:'date',
 						formatter: {
 							date: function (date, settings) {
-						      	if (!date) return '';
+						      	if (!date) return userBorn;
 						      	var day = date.getDate();
 						      	var month = date.getMonth() + 1;
 						      	var year = date.getFullYear();
@@ -60,6 +73,8 @@
 						   	}
 						}
 					});
+					
+					$('#userBornInput').val(userBorn);
 				});
 			}(jQuery));
 			

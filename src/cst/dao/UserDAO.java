@@ -3,6 +3,7 @@ package cst.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -154,4 +155,130 @@ public class UserDAO {
 		// DB Error
 		return -1;
 	}
+	
+	public int unregister(String userID) {
+		try {
+			Document query = new Document();
+
+			query.append("userID", userID);
+
+			collection.deleteOne(query);
+
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int modifyUserBorn(String userID, String userBorn) {
+		try {
+			Document query = new Document();
+			Document user = new Document();
+			Document update = null;
+
+			query.append("userID", userID);
+
+			user.append("userBorn", userBorn);
+
+			update = new Document("$set", user);
+
+			collection.updateOne(query, update);
+
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int modifyUserNick(String userID, String userNick) {
+		try {
+			Document query = new Document();
+			Document user = new Document();
+			Document update = null;
+
+			query.append("userID", userID);
+
+			user.append("userNick", userNick);
+
+			update = new Document("$set", user);
+
+			collection.updateOne(query, update);
+
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int modifyUserPassword(String userID, String originPassword, String newPassword) {
+		try {
+			Document query = new Document();
+			Document user = new Document();
+			Document update = null;
+
+			query.append("userID", userID);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				if(rs.getString("userPassword").equals(originPassword)) {
+					
+					user.append("userPassword", newPassword);
+
+					update = new Document("$set", user);
+
+					collection.updateOne(query, update);
+					
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
 }
