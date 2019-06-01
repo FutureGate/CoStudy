@@ -43,6 +43,8 @@
 			<%
 				if(group != null) {
 			%>
+				<a class="ui red button" href="/CoStudy/group/registerAction.do">가입신청</a>
+			
 				<h3><%= group.getGroupMaster() %></h3>
 				<h3><%= group.getGroupName() %></h3>
 				<h3><%= group.getStudyStart() %></h3>

@@ -1,4 +1,4 @@
-package cst.command.group;
+package cst.command.group.registration;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -13,9 +13,9 @@ import cst.dao.ChatDAO;
 import cst.dao.GroupDAO;
 import cst.dto.GroupDTO;
 
-public class GroupViewCommand implements CstCommand {
+public class GroupRegisterCommand implements CstCommand {
 
-    public GroupViewCommand() {
+    public GroupRegisterCommand() {
         super();
     }
 
@@ -29,8 +29,11 @@ public class GroupViewCommand implements CstCommand {
 		GroupDTO group = dao.getGroup(groupName);
 		
 		if(group != null) {
-			req.setAttribute("group", group);
-			req.setAttribute("isRegistered", dao.isRegistered(groupName, userID));
+			if(group.getGroupPop() < 50) {
+				dao.registerUser(groupName, userID);
+			} else {
+				// Group Pop Error
+			}
 		}
 		
 		return 1;

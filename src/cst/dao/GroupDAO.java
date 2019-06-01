@@ -55,6 +55,7 @@ public class GroupDAO {
 			Document query = new Document();
 			Document board = new Document();
 			ArrayList<String> registered = new ArrayList<String>();
+			ArrayList<String> registerWaiting = new ArrayList<String>();
 			
 			registered.add(groupMaster);
 			
@@ -64,8 +65,10 @@ public class GroupDAO {
 			query.append("studyFinish", studyFinish);
 			query.append("studyLocation", studyLocation);
 			query.append("groupPop", 1);
+			query.append("groupScore", 0);
 			query.append("board", board);
 			query.append("registered", registered);
+			query.append("registerWaiting", registerWaiting);
 			
 			collection.insertOne(query);
 
@@ -102,6 +105,7 @@ public class GroupDAO {
 				group.setStudyFinish(rs.getString("studyFinish"));
 				group.setStudyLocation(rs.getString("studyLocation"));
 				group.setGroupPop(rs.getInteger("groupPop"));
+				group.setGroupScore(rs.getInteger("groupScore"));
 				
 				return group;
 			} else {
@@ -140,6 +144,7 @@ public class GroupDAO {
 				group.setStudyFinish(rs.getString("studyFinish"));
 				group.setStudyLocation(rs.getString("studyLocation"));
 				group.setGroupPop(rs.getInteger("groupPop"));
+				group.setGroupScore(rs.getInteger("groupScore"));
 				
 				groupList.add(group);
 			}
@@ -254,6 +259,173 @@ public class GroupDAO {
 
 		// DB Error
 		return list;
+	}
+	
+	public int isRegistered(String groupName, String userID) {
+		try {
+			Document query = new Document();
+			
+			ArrayList<String> registerWaiting = null;
+			ArrayList<String> registered = null;
+			
+			query.append("groupName", groupName);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				registered = (ArrayList<String>) rs.get("registered");
+				registerWaiting = (ArrayList<String>) rs.get("registerWaiting");
+				
+				for(String id : registered) {
+					if(id.equals(userID)) {
+						// user had registered
+						return 1;
+					}
+				}
+				
+				for(String id : registerWaiting) {
+					if(id.equals(userID)) {
+						// user waiting registering
+						return 2;
+					}
+				}
+				
+				// user not registered
+				return 0;
+			} else {
+				return -1;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int registerUser(String groupName, String userID) {
+		try {
+			Document query = new Document();
+			Document registerWaiting = new Document();
+			Document board = new Document();
+			Document update = null;
+			
+			ArrayList<String> registerWaitingList = null;
+			
+			query.append("groupName", groupName);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
+				
+				registerWaitingList.add(userID);
+				
+				registerWaiting.append("registerWaiting", registerWaitingList);
+				
+				update = new Document("$set", registerWaiting);
+				
+				collection.updateOne(query, update);
+				
+				return 1;
+			} else {
+				return -1;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int acceptUser(String groupName, String userID) {
+		try {
+			Document query = new Document();
+			Document registerWaiting = new Document();
+			Document registered = new Document();
+			Document group = new Document();
+			Document board = new Document();
+			Document update = null;
+			
+			ArrayList<String> registerWaitingList = null;
+			ArrayList<String> registeredList = null;
+			
+			int groupPop = 0;
+			
+			query.append("groupName", groupName);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				if(isRegistered(groupName, userID) == 2) {
+					registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
+					registerWaitingList.remove(userID);
+					
+					registerWaiting.append("registerWaiting", registerWaitingList);
+					
+					update = new Document("$set", registerWaiting);
+					
+					collection.updateOne(query, update);
+					update.clear();
+					
+					registeredList = (ArrayList<String>) rs.get("registered");
+					registeredList.add(userID);
+					registered.append("registered", registeredList);
+					
+					update = new Document("$set", registered);
+					
+					collection.updateOne(query, update);
+					update.clear();
+					
+					groupPop = rs.getInteger("groupPop");
+					group.append("groupPop", groupPop+1);
+
+					update = new Document("$set", group);
+					
+					collection.updateOne(query, update);
+					update.clear();
+					
+					return 1;
+				} else {
+					return -1;
+				}
+			} else {
+				return -1;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
 	}
 	
 	public boolean getIsNext(String groupName, int pageNumber) {

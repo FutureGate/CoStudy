@@ -10,6 +10,7 @@ public class GroupDTO {
 	String studyFinish;
 	String studyLocation;
 	int groupPop;
+	int groupScore;
 	
 	
 	public String getGroupURL() {
@@ -65,6 +66,12 @@ public class GroupDTO {
 	}
 	public void setGroupPop(int groupPop) {
 		this.groupPop = groupPop;
+	}
+	public int getGroupScore() {
+		return groupScore;
+	}
+	public void setGroupScore(int groupScore) {
+		this.groupScore = groupScore;
 	}
 	
 	
