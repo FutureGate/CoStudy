@@ -144,7 +144,7 @@ public class GroupDAO {
 				group.setStudyFinish(rs.getString("studyFinish"));
 				group.setStudyLocation(rs.getString("studyLocation"));
 				group.setGroupPop(rs.getInteger("groupPop"));
-				group.setGroupScore(rs.getInteger("groupScore"));
+				//group.setGroupScore(rs.getInteger("groupScore"));
 				
 				groupList.add(group);
 			}
