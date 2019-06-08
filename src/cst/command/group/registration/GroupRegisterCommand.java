@@ -27,7 +27,7 @@ public class GroupRegisterCommand implements CstCommand {
 		GroupDAO dao = new GroupDAO();
 		
 		GroupDTO group = dao.getGroup(groupName);
-		
+
 		if(group != null) {
 			if(group.getGroupPop() < 50) {
 				dao.registerUser(groupName, userID);

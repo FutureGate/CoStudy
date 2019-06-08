@@ -16,6 +16,37 @@
 %>
 
 <title>RegisterBody</title>
+<style>
+	#map-wrapper {
+		margin: 2.5em auto;
+		max-width: 960px;
+		overflow: hidden;
+	}
+	
+	#map {
+		float: right;
+		width: 100%;
+		height: 200px;
+	}
+	
+	@media screen and (max-width: 768px) {
+		#places, #map {
+			float: none;
+			width: auto;
+			margin-bottom: 1em;
+		}
+		
+		#places {
+			text-align: center;
+		}
+		
+		#map {
+			width: 100%;
+		}
+	}
+	
+</style>
+
 </head>
 	<body id="registerBody">
 		<br />
@@ -92,10 +123,13 @@
             			</div>
             			
             			<div class="field">
-              				<div class="ui left icon input">
-                				<i class="user icon"></i>
-                				
-                				<input name="studyLocation" placeholder="스터디 장소" type="text" />
+            				<div class="map-wrapper">
+            					<input type="hidden" id="initPlace" data-coords="37.5650172,126.8494668" data-zoom="12" />
+            					<div id="map"></div>
+            				</div>
+            				
+              				<div class="ui fluid input">
+                				<input id="studyLocation" name="studyLocation" placeholder="스터디 장소" type="hidden" />
               				</div>
             			</div>
             			
@@ -109,11 +143,10 @@
         		</form>
       		</div>
     	</div>
-    	
+
     	<br />
 		<br />
 		<br />
 		<br />
-		
     </body>
 		

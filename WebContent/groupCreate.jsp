@@ -35,7 +35,6 @@
     
     	<jsp:include page="./component/General/Footer.jsp"></jsp:include>
 	
-		
 		<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
 		<script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="  crossorigin="anonymous"></script>
@@ -44,15 +43,51 @@
 		<script src="/CoStudy/js/defaultHeader.js"></script>
 		<script>
 			(function ($) {
+				var map;
+				var markers = [];
+				
 				$(document).ready(function() {
+					var createMap = function( coords, zoom ) {
+						var coordsParts = coords.split( "," );
+						if( typeof google !== "undefined" ) {
+							var options = {
+								zoom: zoom,
+								center: new google.maps.LatLng( coordsParts[0], coordsParts[1] ),
+								mapTypeId: google.maps.MapTypeId.ROADMAP,
+								disableDefaultUI: true
+							};
+							
+							map = new google.maps.Map( document.getElementById( "map" ), options );
+								
+							var marker = new google.maps.Marker({
+								position: new google.maps.LatLng( coordsParts[0], coordsParts[1] ),
+								map: map
+							});
+							
+							map.addListener('center_changed', function() {
+								 window.setTimeout(function() {
+					                  var center = map.getCenter();
+					                  marker.setPosition(center);
+					                  
+					                  $('#studyLocation').val(center.lat() + ',' + center.lng());
+					                }, 100);
+								
+							});
+					
+						}
+					};
+					
+					createMap( $('#initPlace').data( "coords" ), $('#initPlace').data( "zoom" ) );
+					
 					$('.timepicker').calendar({
 						ampm: false,
 					  	type: 'time'
 					});
 				});
 			}(jQuery));
-			
-			
 		</script>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key= AIzaSyBRd5iHCYVNcTPO-Wnp46ct3jdJi9ZM9_s"></script>
 	</body>
 </html>

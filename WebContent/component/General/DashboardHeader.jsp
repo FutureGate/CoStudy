@@ -49,13 +49,5 @@
 			    </div>
 			</div>
 		</div>
-		
-		<div class="ui bottom fixed hidden menu" id="defaultMenu">
-      		<div class="ui container">
-	        	<a class="ui right item" href="#root">
-	          		<i class="pencil alternate icon"></i> 코스터디
-	        	</a>
-			</div>
-		</div>
     </body>
 		

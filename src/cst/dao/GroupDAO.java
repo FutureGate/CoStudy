@@ -86,6 +86,38 @@ public class GroupDAO {
 		return -1;
 	}
 
+	public int modifyGroup(String groupName, String studyStart, String studyFinish, String studyLocation) {
+		try {
+			Document query = new Document();
+			Document newGroup = new Document();
+			Document update = null;
+			
+			query.append("groupName", groupName);
+
+			newGroup.append("studyStart", studyStart);
+			newGroup.append("studyFinish", studyFinish);
+			newGroup.append("studyLocation", studyLocation);
+			
+			update = new Document("$set", newGroup);
+			
+			collection.updateOne(query, update);
+				
+			return 1;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
 	public GroupDTO getGroup(String groupName) {
 		try {
 			Document query = new Document();
@@ -144,7 +176,7 @@ public class GroupDAO {
 				group.setStudyFinish(rs.getString("studyFinish"));
 				group.setStudyLocation(rs.getString("studyLocation"));
 				group.setGroupPop(rs.getInteger("groupPop"));
-				//group.setGroupScore(rs.getInteger("groupScore"));
+				group.setGroupScore(rs.getInteger("groupScore"));
 				
 				groupList.add(group);
 			}
@@ -357,7 +389,42 @@ public class GroupDAO {
 		return -1;
 	}
 	
+	public ArrayList<String> getRegisterWaiting(String groupName) {
+		try {
+			Document query = new Document();
+			
+			ArrayList<String> registerWaitingList = null;
+			
+			query.append("groupName", groupName);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
+				
+				return registerWaitingList;
+			} else {
+				return null;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return null;
+	}
+	
 	public int acceptUser(String groupName, String userID) {
+		
 		try {
 			Document query = new Document();
 			Document registerWaiting = new Document();
@@ -379,6 +446,7 @@ public class GroupDAO {
 				Document rs = cur.next();
 				
 				if(isRegistered(groupName, userID) == 2) {
+					
 					registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
 					registerWaitingList.remove(userID);
 					
@@ -402,6 +470,59 @@ public class GroupDAO {
 					group.append("groupPop", groupPop+1);
 
 					update = new Document("$set", group);
+					
+					collection.updateOne(query, update);
+					update.clear();
+					
+					return 1;
+				} else {
+					return -1;
+				}
+			} else {
+				return -1;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int denyUser(String groupName, String userID) {
+		try {
+			Document query = new Document();
+			Document registerWaiting = new Document();
+			Document group = new Document();
+			Document board = new Document();
+			Document update = null;
+			
+			ArrayList<String> registerWaitingList = null;
+			
+			int groupPop = 0;
+			
+			query.append("groupName", groupName);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				if(isRegistered(groupName, userID) == 2) {
+					
+					registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
+					registerWaitingList.remove(userID);
+					
+					registerWaiting.append("registerWaiting", registerWaitingList);
+					
+					update = new Document("$set", registerWaiting);
 					
 					collection.updateOne(query, update);
 					update.clear();

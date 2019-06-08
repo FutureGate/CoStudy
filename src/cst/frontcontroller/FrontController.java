@@ -24,6 +24,7 @@ import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
 import cst.command.group.GroupCreateCommand;
 import cst.command.group.GroupListCommand;
+import cst.command.group.GroupModifyCommand;
 import cst.command.group.GroupViewCommand;
 import cst.command.group.board.GroupBoardDeleteCommand;
 import cst.command.group.board.GroupBoardEditCommand;
@@ -33,6 +34,10 @@ import cst.command.group.board.GroupBoardWriteCommand;
 import cst.command.group.board.comment.GroupBoardCommentDeleteCommand;
 import cst.command.group.board.comment.GroupBoardCommentListCommand;
 import cst.command.group.board.comment.GroupBoardCommentWriteCommand;
+import cst.command.group.registration.GroupAcceptCommand;
+import cst.command.group.registration.GroupAcceptPageCommand;
+import cst.command.group.registration.GroupDenyCommand;
+import cst.command.group.registration.GroupRegisterCommand;
 import cst.command.user.UserBornSettingCommand;
 import cst.command.user.UserNickSettingCommand;
 import cst.command.user.UserPasswordSettingCommand;
@@ -166,9 +171,71 @@ public class FrontController extends HttpServlet {
 			
 			viewPage = "/CoStudy/group/viewAll.do";
 			isFowarding = false;
+		
 			
+		// User Register
+		} else if(command.equals("/group/registerAction.do")) {
+			String groupName = req.getParameter("groupname");
+			
+			cmd = new GroupRegisterCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/group/view.do?groupname=" + groupName;
+			isFowarding = false;
+
+		// Accept User Page
+		} else if(command.equals("/group/accept.do")) {
+			String groupName = req.getParameter("groupname");
+			
+			cmd = new GroupAcceptPageCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/groupAccept.jsp";
+			isFowarding = true;
+
+		// Accept User
+		} else if(command.equals("/group/acceptAction.do")) {
+			String groupName = req.getParameter("groupname");
+			
+			cmd = new GroupAcceptCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/group/accept.do?groupname=" + groupName;
+			isFowarding = false;
+
+		// Deny User
+		} else if(command.equals("/group/denyAction.do")) {
+			String groupName = req.getParameter("groupname");
+			
+			cmd = new GroupDenyCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/group/accept.do?groupname=" + groupName;
+			isFowarding = false;
+
+		// Deny User
+		} else if(command.equals("/group/modify.do")) {
+
+			cmd = new GroupViewCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/groupModify.jsp";
+			isFowarding = true;
+
+		// Deny User
+		} else if(command.equals("/group/modifyAction.do")) {
+			String groupName = req.getParameter("groupname");
+
+			cmd = new GroupModifyCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/CoStudy/group/modify.do?groupname=" + groupName;
+			isFowarding = false;
+
+		}
+		
 		// Get Board List Action
-		} else if(command.equals("/group/bbs/list.do")) {
+		if(command.equals("/group/bbs/list.do")) {
 			cmd = new GroupBoardListCommand();
 			cmd.execute(req, res);
 			
