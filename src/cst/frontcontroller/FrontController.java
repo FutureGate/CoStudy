@@ -1,6 +1,7 @@
 package cst.frontcontroller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -75,6 +76,8 @@ public class FrontController extends HttpServlet {
 		
 		String uri = req.getRequestURI();
 		String path = req.getContextPath();
+
+		PrintWriter script = res.getWriter();
 		
 		String command = uri.substring(path.length());
 		
@@ -99,17 +102,31 @@ public class FrontController extends HttpServlet {
 				viewPage = "/CoStudy/dashboard.do";
 				isFowarding = false;
 			} else {
-				viewPage = "/CoStudy/login.jsp";
-				isFowarding = false;
+				script.println("<script>");
+				script.println("alert('아이디 혹은 비밀번호를 확인해주세요.');");
+				script.println("history.back();");
+				script.println("</script>");
 			}
 			
 		// User Register
 		} else if(command.equals("/userRegisterAction.do")) {
 			cmd = new UserRegisterCommand();
-			cmd.execute(req, res);
-
-			viewPage = "/CoStudy/index.jsp";
-			isFowarding = false;
+			result = cmd.execute(req, res);
+			
+			if(result == -1) {
+				script.println("<script>");
+				script.println("alert('해당하는 아이디가 이미 존재합니다.');");
+				script.println("history.back();");
+				script.println("</script>");
+			} else if(result == 0) {
+				script.println("<script>");
+				script.println("alert('해당하는 닉네임이 이미 존재합니다.');");
+				script.println("history.back();");
+				script.println("</script>");
+			} else {
+				viewPage = "/CoStudy/index.jsp";
+				isFowarding = false;
+			}
 		
 			
 		// User Logout
@@ -171,10 +188,17 @@ public class FrontController extends HttpServlet {
 		// Create Group
 		} else if(command.equals("/group/createGroupAction.do")) {
 			cmd = new GroupCreateCommand();
-			cmd.execute(req, res);
+			result = cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/group/viewAll.do";
-			isFowarding = false;
+			if(result == -1) {
+				script.println("<script>");
+				script.println("alert('해당하는 이름의 그룹이 이미 존재합니다.');");
+				script.println("history.back();");
+				script.println("</script>");
+			} else {
+				viewPage = "/CoStudy/group/viewAll.do";
+				isFowarding = false;
+			}
 		
 			
 		// User Register
@@ -217,7 +241,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/CoStudy/group/accept.do?groupname=" + groupName;
 			isFowarding = false;
 
-		// Deny User
+		// Modfiy Group
 		} else if(command.equals("/group/modify.do")) {
 
 			cmd = new GroupViewCommand();
@@ -226,7 +250,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/groupModify.jsp";
 			isFowarding = true;
 
-		// Deny User
+		// Modify Group Action
 		} else if(command.equals("/group/modifyAction.do")) {
 			String groupName = req.getParameter("groupname");
 
@@ -236,7 +260,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/CoStudy/group/modify.do?groupname=" + groupName;
 			isFowarding = false;
 
-		// Deny User
+		// Load Group Rank
 		} else if(command.equals("/group/rank.do")) {
 			cmd = new GroupRankingCommand();
 			cmd.execute(req, res);
@@ -474,10 +498,17 @@ public class FrontController extends HttpServlet {
 		// User Nick Setting Action
 		} else if(command.equals("/user/userNickSettingAction.do")) {
 			cmd = new UserNickSettingCommand();
-			cmd.execute(req, res);
+			result = cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/user/nicknameSetting.do";
-			isFowarding = false;
+			if(result == -1) {
+				script.println("<script>");
+				script.println("alert('해당하는 닉네임이 이미 존재합니다.');");
+				script.println("history.back();");
+				script.println("</script>");
+			} else {
+				viewPage = "/CoStudy/user/nicknameSetting.do";
+				isFowarding = false;
+			}
 			
 		// User Password Setting Action
 		} else if(command.equals("/user/userPasswordSettingAction.do")) {

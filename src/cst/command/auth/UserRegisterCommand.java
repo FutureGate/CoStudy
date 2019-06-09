@@ -1,6 +1,7 @@
 package cst.command.auth;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,6 @@ public class UserRegisterCommand implements CstCommand {
 
 	@Override
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		
-		
 		String userID = req.getParameter("userID");
 		String userPassword = req.getParameter("userPassword");
 		String userNick = req.getParameter("userNick");
@@ -27,6 +26,7 @@ public class UserRegisterCommand implements CstCommand {
 		String userGender = req.getParameter("userGender");
 		
 		UserDAO dao = new UserDAO();
+
 		return dao.register(userID, userPassword, userNick, userEmail, userBorn, userGender);
 	}
 

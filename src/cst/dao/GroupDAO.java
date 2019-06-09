@@ -53,29 +53,61 @@ public class GroupDAO {
 	public int createGroup(String groupName, String groupMaster, String studyStart, String studyFinish, String studyLocation) {
 		try {
 			Document query = new Document();
-			Document board = new Document();
+			ArrayList<Document> board = new ArrayList<Document>();
 			ArrayList<String> registered = new ArrayList<String>();
 			ArrayList<String> registerWaiting = new ArrayList<String>();
 			
-			registered.add(groupMaster);
+			if(isGroupExist(groupName) != 1) {
+				registered.add(groupMaster);
+				
+				UserDAO dao = new UserDAO();
+				
+				dao.forceRegisterUser(groupName, groupMaster);
+				
+				query.append("groupName", groupName);
+				query.append("groupMaster", groupMaster);
+				query.append("studyStart", studyStart);
+				query.append("studyFinish", studyFinish);
+				query.append("studyLocation", studyLocation);
+				query.append("groupPop", 1);
+				query.append("groupScore", 0);
+				query.append("board", board);
+				query.append("registered", registered);
+				query.append("registerWaiting", registerWaiting);
+				
+				collection.insertOne(query);
 			
-			UserDAO dao = new UserDAO();
-			
-			dao.forceRegisterUser(groupName, groupMaster);
+				return 1;
+			} else {
+				return -1;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
+	public int isGroupExist(String groupName) {
+		try {
+			Document query = new Document();
 			
 			query.append("groupName", groupName);
-			query.append("groupMaster", groupMaster);
-			query.append("studyStart", studyStart);
-			query.append("studyFinish", studyFinish);
-			query.append("studyLocation", studyLocation);
-			query.append("groupPop", 1);
-			query.append("groupScore", 0);
-			query.append("board", board);
-			query.append("registered", registered);
-			query.append("registerWaiting", registerWaiting);
 			
-			collection.insertOne(query);
-
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				return 1;
+			} else {
+				return 0;
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -603,31 +635,25 @@ public class GroupDAO {
 		try {
 			Document query = new Document();
 			Document newGroup = new Document();
-			Document board = new Document();
 			Document update = null;
 		
 			int index = -1;
 			
 			query.append("groupName", groupName);
 
-			ArrayList<Document> boardList = getBoardList(groupName);
+			cur = collection.find(query).iterator();
 			
-			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
-			
-			newBoard = boardList.get(index);
-			
-			newBoard.remove("boardHit");
-			newBoard.append("boardHit", hit+1);
-						
-			boardList.set(index, newBoard);
-			
-			board.append("board", boardList);
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				int groupScore = rs.getInteger("groupScore");
+				
+				newGroup.append("groupScore", groupScore+score);
+				
+				update = new Document("$set", newGroup);
 
-			update = new Document("$set", board);
-
-			collection.updateOne(query, update);
-
-
+				collection.updateOne(query, update);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -822,6 +848,8 @@ public class GroupDAO {
 
 			collection.updateOne(query, update);
 
+			addScore(groupName, 5);
+			
 			return 1;
 
 		} catch(Exception e) {

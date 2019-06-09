@@ -1,13 +1,19 @@
 package cst.dao;
 
+import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.bson.Document;
 
 import com.mongodb.MongoClient;
@@ -17,6 +23,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 import cst.dto.UserDTO;
+import cst.util.AES256Util;
 
 public class UserDAO {
 	
@@ -37,7 +44,7 @@ public class UserDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Login
 	public int login(String userID, String userPassword, HttpServletRequest req) {
 		try {
@@ -50,7 +57,12 @@ public class UserDAO {
 			if(cur.hasNext()) {
 				Document rs = cur.next();
 				
-				if(rs.getString("userPassword").equals(userPassword)) {
+				AES256Util aes = new AES256Util();
+				
+				String encPassword = rs.getString("userPassword");
+				encPassword = aes.decrypt(encPassword);
+				
+				if(encPassword.equals(userPassword)) {
 					// ID and password correct
 					
 					UserDTO user = new UserDTO();
@@ -82,7 +94,6 @@ public class UserDAO {
 		} finally {
 			try {
 				if(cur != null) cur.close();
-				if(mongo != null) mongo.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -114,7 +125,6 @@ public class UserDAO {
 		} finally {
 			try {
 				if(cur != null) cur.close();
-				if(mongo != null) mongo.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -131,30 +141,41 @@ public class UserDAO {
 			ArrayList<String> registered = new ArrayList<String>();
 			ArrayList<String> registerWaiting = new ArrayList<String>();
 			
-			query.append("userLevel", 0);
-			query.append("userID", userID);
-			query.append("userPassword", userPassword);
-			query.append("userNick", userNick);
-			query.append("userEmail", userEmail);
-			query.append("userProfile", null);
-			query.append("userBorn", userBorn);
-			query.append("userGender", userGender);
-			query.append("isCertificated", 0);
-
-			query.append("registered", registered);
-			query.append("registerWaiting", registerWaiting);
-			
-			
-			collection.insertOne(query);
-			
-			return 1;
+			if((registerCheck(userID) != 1)) {
+				if(isUserNickExist(userNick) != 1) {
+					AES256Util aes = new AES256Util();
+					
+					userPassword = aes.encrypt(userPassword);
+					
+					query.append("userLevel", 0);
+					query.append("userID", userID);
+					query.append("userPassword", userPassword);
+					query.append("userNick", userNick);
+					query.append("userEmail", userEmail);
+					query.append("userProfile", null);
+					query.append("userBorn", userBorn);
+					query.append("userGender", userGender);
+					query.append("isCertificated", 0);
+		
+					query.append("registered", registered);
+					query.append("registerWaiting", registerWaiting);
+					
+					
+					collection.insertOne(query);
+					
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				return -1;
+			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				if(cur != null) cur.close();
-				if(mongo != null) mongo.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -218,21 +239,52 @@ public class UserDAO {
 		return -1;
 	}
 	
+	public int isUserNickExist(String userNick) {
+		try {
+			Document query = new Document();
+
+			query.append("userNick", userNick);
+	
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return -1;
+	}
+	
 	public int modifyUserNick(String userID, String userNick) {
 		try {
 			Document query = new Document();
 			Document user = new Document();
 			Document update = null;
 
-			query.append("userID", userID);
-
-			user.append("userNick", userNick);
-
-			update = new Document("$set", user);
-
-			collection.updateOne(query, update);
-
-			return 1;
+			if(isUserNickExist(userNick) != 1) {
+				query.append("userID", userID);
+	
+				user.append("userNick", userNick);
+	
+				update = new Document("$set", user);
+	
+				collection.updateOne(query, update);
+	
+				return 1;
+			} else {
+				return -1;
+			}
 
 		} catch(Exception e) {
 			e.printStackTrace();
