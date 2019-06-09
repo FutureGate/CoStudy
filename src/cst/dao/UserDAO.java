@@ -128,6 +128,9 @@ public class UserDAO {
 		try {
 			Document query = new Document();
 			
+			ArrayList<String> registered = new ArrayList<String>();
+			ArrayList<String> registerWaiting = new ArrayList<String>();
+			
 			query.append("userLevel", 0);
 			query.append("userID", userID);
 			query.append("userPassword", userPassword);
@@ -137,6 +140,10 @@ public class UserDAO {
 			query.append("userBorn", userBorn);
 			query.append("userGender", userGender);
 			query.append("isCertificated", 0);
+
+			query.append("registered", registered);
+			query.append("registerWaiting", registerWaiting);
+			
 			
 			collection.insertOne(query);
 			
@@ -282,39 +289,32 @@ public class UserDAO {
 		return -1;
 	}
 	
-	public int isRegistered(String groupName, String userID) {
+	public int registerUser(String groupName, String userID) {
 		try {
 			Document query = new Document();
+			Document registerWaiting = new Document();
+			Document update = null;
 			
-			ArrayList<String> registerWaiting = null;
-			ArrayList<String> registered = null;
+			ArrayList<String> registerWaitingList = null;
 			
-			query.append("groupName", groupName);
+			query.append("userID", userID);
 
 			cur = collection.find(query).iterator();
 			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
 				
-				registered = (ArrayList<String>) rs.get("registered");
-				registerWaiting = (ArrayList<String>) rs.get("registerWaiting");
+				registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
 				
-				for(String id : registered) {
-					if(id.equals(userID)) {
-						// user had registered
-						return 1;
-					}
-				}
+				registerWaitingList.add(groupName);
 				
-				for(String id : registerWaiting) {
-					if(id.equals(userID)) {
-						// user waiting registering
-						return 2;
-					}
-				}
+				registerWaiting.append("registerWaiting", registerWaitingList);
 				
-				// user not registered
-				return 0;
+				update = new Document("$set", registerWaiting);
+				
+				collection.updateOne(query, update);
+				
+				return 1;
 			} else {
 				return -1;
 			}
@@ -333,29 +333,28 @@ public class UserDAO {
 		return -1;
 	}
 	
-	public int registerUser(String groupName, String userID) {
+	public int forceRegisterUser(String groupName, String userID) {
 		try {
 			Document query = new Document();
-			Document registerWaiting = new Document();
-			Document board = new Document();
+			Document registered = new Document();
 			Document update = null;
 			
-			ArrayList<String> registerWaitingList = null;
+			ArrayList<String> registeredList = null;
 			
-			query.append("groupName", groupName);
+			query.append("userID", userID);
 
 			cur = collection.find(query).iterator();
 			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
 				
-				registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
+				registeredList = (ArrayList<String>) rs.get("registered");
 				
-				registerWaitingList.add(userID);
+				registeredList.add(groupName);
 				
-				registerWaiting.append("registerWaiting", registerWaitingList);
+				registered.append("registered", registeredList);
 				
-				update = new Document("$set", registerWaiting);
+				update = new Document("$set", registered);
 				
 				collection.updateOne(query, update);
 				
@@ -383,25 +382,23 @@ public class UserDAO {
 			Document query = new Document();
 			Document registerWaiting = new Document();
 			Document registered = new Document();
-			Document group = new Document();
-			Document board = new Document();
 			Document update = null;
 			
 			ArrayList<String> registerWaitingList = null;
 			ArrayList<String> registeredList = null;
 			
-			int groupPop = 0;
-			
-			query.append("groupName", groupName);
+			query.append("userID", userID);
 
 			cur = collection.find(query).iterator();
 			
 			if(cur.hasNext()) {
 				Document rs = cur.next();
 				
-				if(isRegistered(groupName, userID) == 2) {
+				GroupDAO dao = new GroupDAO();
+				
+				if(dao.isRegistered(groupName, userID) == 2) {
 					registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
-					registerWaitingList.remove(userID);
+					registerWaitingList.remove(groupName);
 					
 					registerWaiting.append("registerWaiting", registerWaitingList);
 					
@@ -411,18 +408,10 @@ public class UserDAO {
 					update.clear();
 					
 					registeredList = (ArrayList<String>) rs.get("registered");
-					registeredList.add(userID);
+					registeredList.add(groupName);
 					registered.append("registered", registeredList);
 					
 					update = new Document("$set", registered);
-					
-					collection.updateOne(query, update);
-					update.clear();
-					
-					groupPop = rs.getInteger("groupPop");
-					group.append("groupPop", groupPop+1);
-
-					update = new Document("$set", group);
 					
 					collection.updateOne(query, update);
 					update.clear();
@@ -448,5 +437,68 @@ public class UserDAO {
 		// DB Error
 		return -1;
 	}
+
 	
+	
+	public ArrayList<String> getRegistered(String userID) {
+		try {
+			Document query = new Document();
+			
+			ArrayList<String> registered = null;
+			
+			query.append("userID", userID);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				registered = (ArrayList<String>) rs.get("registered");
+					
+				return registered;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return null;
+	}
+	
+	public ArrayList<String> getRegisterWaiting(String userID) {
+		try {
+			Document query = new Document();
+			
+			ArrayList<String> registerWaiting = null;
+			
+			query.append("userID", userID);
+
+			cur = collection.find(query).iterator();
+			
+			if(cur.hasNext()) {
+				Document rs = cur.next();
+
+				registerWaiting = (ArrayList<String>) rs.get("registerWaiting");
+					
+				return registerWaiting;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return null;
+	}
 }

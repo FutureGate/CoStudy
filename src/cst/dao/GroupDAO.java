@@ -59,6 +59,10 @@ public class GroupDAO {
 			
 			registered.add(groupMaster);
 			
+			UserDAO dao = new UserDAO();
+			
+			dao.forceRegisterUser(groupName, groupMaster);
+			
 			query.append("groupName", groupName);
 			query.append("groupMaster", groupMaster);
 			query.append("studyStart", studyStart);
@@ -164,6 +168,43 @@ public class GroupDAO {
 		try {
 			
 			cur = collection.aggregate(Arrays.asList(Aggregates.sample(12))).iterator();
+			
+			while(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				GroupDTO group = new GroupDTO();
+				
+				group.setGroupName(rs.getString("groupName"));
+				group.setGroupMaster(rs.getString("groupMaster"));
+				group.setStudyStart(rs.getString("studyStart"));
+				group.setStudyFinish(rs.getString("studyFinish"));
+				group.setStudyLocation(rs.getString("studyLocation"));
+				group.setGroupPop(rs.getInteger("groupPop"));
+				group.setGroupScore(rs.getInteger("groupScore"));
+				
+				groupList.add(group);
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return groupList;
+	}
+	
+	public ArrayList<GroupDTO> getGroupListByRank() {
+		ArrayList<GroupDTO> groupList = new ArrayList<GroupDTO>();
+		
+		try {
+			
+			cur = collection.find().sort(Sorts.descending("groupScore")).limit(10).iterator();
 			
 			while(cur.hasNext()) {
 				Document rs = cur.next();
@@ -360,6 +401,10 @@ public class GroupDAO {
 			if(cur.hasNext()) {
 				Document rs = cur.next();
 				
+				UserDAO dao = new UserDAO();
+				
+				dao.registerUser(groupName, userID);
+				
 				registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
 				
 				registerWaitingList.add(userID);
@@ -369,6 +414,8 @@ public class GroupDAO {
 				update = new Document("$set", registerWaiting);
 				
 				collection.updateOne(query, update);
+				
+				
 				
 				return 1;
 			} else {
@@ -446,6 +493,9 @@ public class GroupDAO {
 				Document rs = cur.next();
 				
 				if(isRegistered(groupName, userID) == 2) {
+					UserDAO dao = new UserDAO();
+					
+					dao.acceptUser(groupName, userID);
 					
 					registerWaitingList = (ArrayList<String>) rs.get("registerWaiting");
 					registerWaitingList.remove(userID);
@@ -549,6 +599,48 @@ public class GroupDAO {
 		return -1;
 	}
 	
+	public void addScore(String groupName, int score) {
+		try {
+			Document query = new Document();
+			Document newGroup = new Document();
+			Document board = new Document();
+			Document update = null;
+		
+			int index = -1;
+			
+			query.append("groupName", groupName);
+
+			ArrayList<Document> boardList = getBoardList(groupName);
+			
+			index = findIndexByBoardID(boardList, Integer.parseInt(boardID));
+			
+			newBoard = boardList.get(index);
+			
+			newBoard.remove("boardHit");
+			newBoard.append("boardHit", hit+1);
+						
+			boardList.set(index, newBoard);
+			
+			board.append("board", boardList);
+
+			update = new Document("$set", board);
+
+			collection.updateOne(query, update);
+
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+	}
+	
 	public boolean getIsNext(String groupName, int pageNumber) {
 
 		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
@@ -589,7 +681,6 @@ public class GroupDAO {
 		// DB Error
 		return false;
 	}
-	
 	
 	public ArrayList<Document> sortBoardList(ArrayList<Document> boardList) {
 		boardList.sort(new Comparator<Document>() {

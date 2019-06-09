@@ -24,7 +24,7 @@
 	            		<table class="ui red table center aligned">
 						 	<thead>
 						    	<tr>
-						    		<th><h2>메시지</h2></th>
+						    		<th><h2 id="chatTitle">메시지</h2></th>
 						  		</tr>
 						  	</thead>
 						  	<tbody>

@@ -32,8 +32,9 @@
             	
             	<div class="ui right item">
             		<div class="ui icon input">
-			        	<input type="text" placeholder="검색">
-			        	<i class="search link icon"></i>
+			        	<a class="item" href="/CoStudy/group/rank.do">
+			        		<i class="chess queen icon"></i> 랭킹
+			        	</a>
 			      	</div>
             	
             		<div class="ui dropdown item" style="margin-left: 0.5em;">

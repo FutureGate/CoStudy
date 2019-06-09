@@ -22,9 +22,11 @@ import cst.command.board.comment.BoardCommentListCommand;
 import cst.command.board.comment.BoardCommentWriteCommand;
 import cst.command.chat.ChatListCommand;
 import cst.command.chat.ChatSendCommand;
+import cst.command.dashboard.DashboardCommand;
 import cst.command.group.GroupCreateCommand;
 import cst.command.group.GroupListCommand;
 import cst.command.group.GroupModifyCommand;
+import cst.command.group.GroupRankingCommand;
 import cst.command.group.GroupViewCommand;
 import cst.command.group.board.GroupBoardDeleteCommand;
 import cst.command.group.board.GroupBoardEditCommand;
@@ -127,6 +129,8 @@ public class FrontController extends HttpServlet {
 			
 		// Dashboard Action
 		if(command.equals("/dashboard.do")) {
+			cmd = new DashboardCommand();
+			cmd.execute(req, res);
 			
 			viewPage = "/dashboard.jsp";
 			isFowarding = true;
@@ -231,6 +235,14 @@ public class FrontController extends HttpServlet {
 			
 			viewPage = "/CoStudy/group/modify.do?groupname=" + groupName;
 			isFowarding = false;
+
+		// Deny User
+		} else if(command.equals("/group/rank.do")) {
+			cmd = new GroupRankingCommand();
+			cmd.execute(req, res);
+			
+			viewPage = "/groupRanking.jsp";
+			isFowarding = true;
 
 		}
 		
