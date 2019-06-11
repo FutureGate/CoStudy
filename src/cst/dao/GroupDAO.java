@@ -39,7 +39,7 @@ public class GroupDAO {
 
 	public GroupDAO() {
 		try {
-			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:11082");
+			MongoClientURI uri = new MongoClientURI("mongodb://13.125.255.107:11082");
 
 			mongo = new MongoClient(uri);
 			db = mongo.getDatabase("costudy");
