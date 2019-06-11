@@ -32,7 +32,7 @@ public class ChatDAO {
 
 	public ChatDAO() {
 		try {
-			MongoClientURI uri = new MongoClientURI("mongodb://54.180.29.105:11082");
+			MongoClientURI uri = new MongoClientURI("mongodb://13.125.255.107:11082");
 
 			mongo = new MongoClient(uri);
 			db = mongo.getDatabase("costudy");
@@ -43,28 +43,29 @@ public class ChatDAO {
 		}
 	}
 	
-	public ArrayList<ChatDTO> getChatListByID(String fromID, String toID, String chatID) {
-		ArrayList<ChatDTO> chatList = null;
+	public ArrayList<ChatDTO> getReceivedChatList(String userID) {
+		ArrayList<ChatDTO> chatList = new ArrayList<ChatDTO>();
 		
 		try {
-			Bson query = Filters.or(Filters.and(Filters.eq("fromID", fromID), Filters.eq("toID", toID)), Filters.and(Filters.eq("toID", toID), Filters.eq("fromID", fromID)));
+			Document query = new Document();
 			
+			query.append("toID", userID);
+
 			cur = collection.find(query).iterator();
-			
-			chatList = new ArrayList<ChatDTO>();
 			
 			while(cur.hasNext()) {
 				Document rs = cur.next();
 				
 				ChatDTO chat = new ChatDTO();
 				
-				chat.setFromID(encode(rs.getString("fromID")));
-				chat.setToID(encode(rs.getString("toID")));
-				chat.setChatContent(encode(rs.getString("chatContent")));
+				chat.setFromID(rs.getString("fromID"));
+				chat.setToID(rs.getString("toID"));
+				chat.setChatContent(rs.getString("chatContent"));
 				chat.setChatTime(rs.getString("chatTime"));
 				
 				chatList.add(chat);
 			}
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -74,131 +75,57 @@ public class ChatDAO {
 				e.printStackTrace();
 			}
 		}
-		
+
+		// DB Error
 		return chatList;
 	}
-//	
-//	public ArrayList<ChatDTO> getChatListByRecent(String fromID, String toID, int number) {
-//		ArrayList<ChatDTO> chatList = null;
-//		
-//		Connection conn = null;
-//		PreparedStatement pstmt = null;
-//		ResultSet rs = null;
-//		
-//		String sql = "select * from chat where ((fromID = ? AND toID = ?) OR (fromID = ? AND toID = ?)) AND chatID > (select MAX(chatID) -? from chat) ORDER BY chatTime";
-//		
-//		try {
-//			conn = ds.getConnection();
-//			pstmt = conn.prepareStatement(sql);
-//			
-//			pstmt.setString(1, fromID);
-//			pstmt.setString(2, toID);
-//			pstmt.setString(3, toID);
-//			pstmt.setString(4, fromID);
-//			pstmt.setInt(5, number);
-//			
-//			rs = pstmt.executeQuery();
-//			
-//			chatList = new ArrayList<ChatDTO>();
-//			
-//			while(rs.next()) {
-//				ChatDTO chat = new ChatDTO();
-//				
-//				chat.setChatID(rs.getInt("chatID"));
-//				chat.setFromID(encode(rs.getString("fromID")));
-//				chat.setToID(encode(rs.getString("toID")));
-//				chat.setChatContent(encode(rs.getString("chatContent")));
-//				
-//				int chatTime = Integer.parseInt(rs.getString("chatTime").substring(11, 13));
-//				String timeType = "오전";
-//				
-//				if(chatTime > 12) {
-//					timeType ="오후";
-//					chatTime -= 12;
-//				}
-//				
-//				chat.setChatTime(rs.getString("chatTime").substring(0, 11) + " " + timeType + " " + chatTime + ":" + rs.getString("chatTime").substring(14, 16));
-//				chatList.add(chat);
-//			}
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				if(rs != null) rs.close();
-//				if(pstmt != null) pstmt.close();
-//				if(conn != null) conn.close();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		
-//		return chatList;
-//	}
-//	
-//	public ArrayList<ChatDTO> getChatRoomListByID(String ID) {
-//		ArrayList<ChatDTO> chatList = null;
-//		
-//		Connection conn = null;
-//		PreparedStatement pstmt = null;
-//		ResultSet rs = null;
-//		
-//		String sql = "select * from chat where ((fromID = ?) OR (toID = ?))";
-//		
-//		try {
-//			conn = ds.getConnection();
-//			pstmt = conn.prepareStatement(sql);
-//			
-//			pstmt.setString(1, ID);
-//			pstmt.setString(2, ID);
-//			
-//			rs = pstmt.executeQuery();
-//			
-//			chatList = new ArrayList<ChatDTO>();
-//			
-//			while(rs.next()) {
-//				ChatDTO chat = new ChatDTO();
-//				
-//				chat.setFromID(encode(rs.getString("fromID")));
-//				chat.setToID(encode(rs.getString("toID")));
-//				chat.setChatContent(encode(rs.getString("chatContent")));
-//				
-//				int chatTime = Integer.parseInt(rs.getString("chatTime").substring(11, 13));
-//				String timeType = "오전";
-//				
-//				if(chatTime > 12) {
-//					timeType ="오후";
-//					chatTime -= 12;
-//				}
-//				
-//				chat.setChatTime(rs.getString("chatTime").substring(0, 11) + " " + timeType + " " + chatTime + ":" + rs.getString("chatTime").substring(14, 16));
-//				chatList.add(chat);
-//			}
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				if(rs != null) rs.close();
-//				if(pstmt != null) pstmt.close();
-//				if(conn != null) conn.close();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		
-//		return chatList;
-//	}
-//	
+	
+	public ArrayList<ChatDTO> getSendedChatList(String userID) {
+		ArrayList<ChatDTO> chatList = new ArrayList<ChatDTO>();
+		
+		try {
+			Document query = new Document();
+			
+			query.append("fromID", userID);
+
+			cur = collection.find(query).iterator();
+			
+			while(cur.hasNext()) {
+				Document rs = cur.next();
+				
+				ChatDTO chat = new ChatDTO();
+				
+				chat.setFromID(rs.getString("fromID"));
+				chat.setToID(rs.getString("toID"));
+				chat.setChatContent(rs.getString("chatContent"));
+				chat.setChatTime(rs.getString("chatTime"));
+				
+				chatList.add(chat);
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cur != null) cur.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DB Error
+		return chatList;
+	}
+	
 	public int sendChat(String fromID, String toID, String chatContent) {
 		try {
 			Document query = new Document();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			
-			query.append("toID", toID);
 			query.append("fromID", fromID);
+			query.append("toID", toID);
 			query.append("chatContent", chatContent);
-			query.append("chatDate", format.format(new Date()));
+			query.append("chatTime", format.format(new Date()));
 
 			collection.insertOne(query);
 
@@ -215,10 +142,4 @@ public class ChatDAO {
 		// DB Error
 		return -1;
 	}
-	
-	public String encode(String data) {
-		return data.replaceAll(" ", "&nbsp;").replaceAll("<", "lt").replaceAll(">", "&gt;").replaceAll("\n", "<br />");
-	}
-	
-	
 }

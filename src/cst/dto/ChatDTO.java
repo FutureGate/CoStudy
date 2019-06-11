@@ -1,18 +1,12 @@
 package cst.dto;
 
 public class ChatDTO {
-	int chatID;
+
 	String fromID;
 	String toID;
 	String chatContent;
 	String chatTime;
 	
-	public int getChatID() {
-		return chatID;
-	}
-	public void setChatID(int chatID) {
-		this.chatID = chatID;
-	}
 	public String getFromID() {
 		return fromID;
 	}

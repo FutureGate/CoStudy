@@ -1,5 +1,8 @@
 package cst.dto;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 public class GroupDTO {
 	String groupURL;
 	String groupName;
@@ -21,6 +24,16 @@ public class GroupDTO {
 	}
 	public String getGroupName() {
 		return groupName;
+	}
+	public String getGroupName2() {
+		String result = groupName;
+		
+		try {
+			result = URLDecoder.decode(result, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;

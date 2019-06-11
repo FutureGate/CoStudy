@@ -1,3 +1,5 @@
+<%@page import="java.net.URLDecoder"%>
+<%@page import="java.net.URLEncoder"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="cst.dto.UserDTO"%>
@@ -37,15 +39,16 @@
            			if(registered != null) {
            				if(registered.size() != 0) {
            					for(String group : registered) {
+           						String name = URLDecoder.decode(group, "UTF-8");
            		%>
 	           				<div class="ui black segment">
 		            			<div class="ui right aligned grid">
 	  								<div class="left aligned eleven wide column">
-	    								<pre><i class="user icon"> <%= group %></i></pre>
+	    								<pre><i class="user icon"> <%= name %></i></pre>
 									</div>
 									
 									<div class="five wide column"">
-    										<a class="ui blue button" href="/CoStudy/group/view.do?groupname=<%= group %>">바로가기</a>
+    										<a class="ui blue button" href="/CoStudy/group/view.do?groupname=<%= URLEncoder.encode(group, "UTF-8") %>">바로가기</a>
 	  								</div>
 		  						</div>
 		            		</div>

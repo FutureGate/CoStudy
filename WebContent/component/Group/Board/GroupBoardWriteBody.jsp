@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html >
@@ -8,6 +9,9 @@
 	// 유저 정보
 	String userID = null;
 	String userNick = null;
+	
+	response.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 	
 	// 유저 정보 받기
 	if(session.getAttribute("user") != null) {
@@ -23,6 +27,7 @@
 %>
 
 <head>
+<meta charset="UTF-8">
 <title>BbsBody</title>
 </head>
 	<body>
@@ -42,7 +47,7 @@
 							    		<th class="fifteen wide">
 							    			<div class="ui fluid input">
 							    				<input type="text" name="boardTitle"></input>
-							    				<input type="hidden" name="groupname" value="<%= groupName %>"></input>
+							    				<input type="hidden" name="groupname" value="<%= URLEncoder.encode(groupName, "UTF-8") %>"></input>
 							    				<input type="hidden" name="userID" value="<%= userID %>"></input>
 							    				<input type="hidden" name="userNick" value="<%= userNick %>"></input>
 							    			</div>
@@ -61,8 +66,8 @@
 							</table>
 							
 							<div style="text-align: right;">
-								<a class="ui black button" href="list.do?groupname=<%=  groupName %>">목록</a>
-								<input type="submit" class="ui red button" value="작성"></a>
+								<a class="ui black button" href="list.do?groupname=<%=  URLEncoder.encode(groupName, "UTF-8") %>">목록</a>
+								<input type="submit" class="ui red button" value="작성"></input>
 							</div>
 						</form>
 	            	</div>

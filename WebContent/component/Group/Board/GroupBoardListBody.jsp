@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -38,7 +39,7 @@
 		isPrevClass = "disabled";
 		prevURL = "#";
 	} else {
-		prevURL = "list.do?groupname=" + groupName + "&pageNumber=" + (index-5);
+		prevURL = "list.do?groupname=" + URLEncoder.encode(groupName, "UTF-8") + "&pageNumber=" + (index-5);
 	}
 	
 	if(request.getAttribute("isNext") != null) {
@@ -49,7 +50,7 @@
 		isNextClass = "disabled";
 		nextURL = "#";
 	} else {
-		nextURL = "list.do?groupname=" + groupName + "&pageNumber=" + (index+1);
+		nextURL = "list.do?groupname=" + URLEncoder.encode(groupName, "UTF-8") + "&pageNumber=" + (index+1);
 	}
 %>
 
@@ -81,7 +82,7 @@
 						    		<c:forEach items="${boardList}" var="bbs">
 						    			<tr>
 							    			<td>${bbs.boardID}</td>
-							    			<td><a href="view.do?groupname=<%= groupName %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
+							    			<td><a href="view.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>&bbsID=${bbs.boardID}">${bbs.boardTitle}</a></td>
 							    			<td>${bbs.userNick}</td>
 							    			<td>${bbs.boardDate}</td>
 							    			<td>${bbs.boardHit}</td>
@@ -101,7 +102,7 @@
 									        	for(int i=index-4; i<=index; i++) {
 									        %>
 									        
-									        <a class="item" href="list.do?groupname=<%= groupName %>&pageNumber=<%= i %>"><%= i %></a>
+									        <a class="item" href="list.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>&pageNumber=<%= i %>"><%= i %></a>
 									        
 									        <%
 									        	}
@@ -117,7 +118,7 @@
 						</table>
 						
 						<div style="text-align: right;">
-								<a class="ui red button" href="write.do?groupname=<%= groupName %>">글쓰기</a>
+								<a class="ui red button" href="write.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">글쓰기</a>
 						</div>
 	            	</div>
           		</div>

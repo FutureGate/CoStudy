@@ -2,6 +2,7 @@ package cst.frontcontroller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -66,7 +67,7 @@ public class FrontController extends HttpServlet {
 
 	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		// Set Encoding
-		req.setCharacterEncoding("UTF-8");
+		req.setCharacterEncoding("utf-8");
 		res.setContentType("text/html;charset=UTF-8");
 		
 		String viewPage = null;
@@ -228,7 +229,7 @@ public class FrontController extends HttpServlet {
 			cmd = new GroupAcceptCommand();
 			cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/group/accept.do?groupname=" + groupName;
+			viewPage = "/CoStudy/group/accept.do?groupname=" + URLEncoder.encode(groupName, "UTF-8");
 			isFowarding = false;
 
 		// Deny User
@@ -238,7 +239,7 @@ public class FrontController extends HttpServlet {
 			cmd = new GroupDenyCommand();
 			cmd.execute(req, res);
 			
-			viewPage = "/CoStudy/group/accept.do?groupname=" + groupName;
+			viewPage = "/CoStudy/group/accept.do?groupname=" + URLEncoder.encode(groupName, "UTF-8");
 			isFowarding = false;
 
 		// Modfiy Group
@@ -557,7 +558,7 @@ public class FrontController extends HttpServlet {
 			
 			
 		// Chatting page
-		} else if(command.equals("/chat.do")) {
+		} else if(command.equals("/chat/receive.do")) {
 			viewPage = "/chatView.jsp";
 			isFowarding = true;
 			

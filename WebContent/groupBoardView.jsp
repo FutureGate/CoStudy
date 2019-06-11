@@ -1,12 +1,22 @@
+<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 	<%
+		String groupName = null;
+	
 		if(request.getSession().getAttribute("user") == null) {
 			response.sendRedirect("/CoStudy/index.jsp");
 		}
+		
+		if(request.getParameter("groupname") != null) {
+			groupName = request.getParameter("groupname");
+			
+			groupName = URLEncoder.encode(groupName, "UTF-8");
+		}
+	
 	%>
 
 	<meta charset="UTF-8">
@@ -42,7 +52,7 @@
 				$(document).ready(function() {
 					$("#btnDelete").click(function() {
 						var isDelete = confirm("삭제하시겠습니까?");
-						var groupName = '<%= request.getParameter("groupname") %>';
+						var groupName = '<%= URLEncoder.encode(groupName, "UTF-8") %>';
 						var bbsID = '<%= request.getParameter("bbsID") %>';
 						if(isDelete == true) {
 							window.location.href = "/CoStudy/group/bbs/deleteAction.do?groupname=" + groupName + "&bbsID=" + bbsID;

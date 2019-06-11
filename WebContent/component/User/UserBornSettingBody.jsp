@@ -55,7 +55,7 @@
             			<div class="field">
             				<div class="ui calendar datepicker">
 							    <div class="ui left icon input">
-							    	<i class="address card icon"></i>
+							    	<i class="calendar icon"></i>
                 				
                 					<input name="userID" type="hidden" value="<%= user.getUserID() %>"/>
                 					<input id="userBornInput" name="userBorn" placeholder="생년월일" type="text"/>

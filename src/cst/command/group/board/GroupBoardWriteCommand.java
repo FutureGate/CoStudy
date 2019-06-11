@@ -1,6 +1,7 @@
 package cst.command.group.board;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,8 @@ public class GroupBoardWriteCommand implements CstCommand {
 		String boardContent = req.getParameter("boardContent");
 		
 		GroupDAO dao = new GroupDAO();
+		
+		groupName = URLDecoder.decode(groupName, "UTF-8");
 		
 		return dao.write(groupName, userID, userNick, boardTitle, boardContent);
 

@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.GroupDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -10,7 +11,6 @@
 	
 	if(request.getAttribute("groupList") != null) {
 		groupList = (ArrayList<GroupDTO>) request.getAttribute("groupList");
-		
 	}
 
 %>
@@ -41,12 +41,13 @@
 			<br />
 		
 			<div class="ui link cards">
-				<c:forEach items="${groupList}" var="group">
-	    			<a class="ui card" href="/CoStudy/group/view.do?groupname=${group.groupName}">
+				<%
+					for(GroupDTO group : groupList) {
+				%>
+	    			<a class="ui card" href="/CoStudy/group/view.do?groupname=<%= URLEncoder.encode(group.getGroupName(), "UTF-8") %>">
 					 	<div class="content">
-					    	<div class="header">${group.groupName}</div>
+					    	<div class="header"><%= group.getGroupName2() %></div>
 					    	<div class="meta">
-					      		<span class="category">${group.groupMaster}</span>
 					    	</div>
 					    	
 					    	<div class="description">
@@ -55,12 +56,19 @@
 					  	</div>
 				  	
 					  	<div class="extra content">
-					    	<div class="right floated author">
-					      		<img class="ui avatar image" src="../static/img/costudy_logo.jpg"> Matt
-					    	</div>
+							<div class="ui equal width grid">
+								<div class="column">
+									그룹장 - <%= group.getGroupMaster() %>
+								</div>
+						  		<div class="right aligned column">
+						  			<%= group.getGroupPop() %> / 50 명
+						  		</div>
+							</div>
 					  	</div>
 					</a>
-	    		</c:forEach>
+	    		<%
+					}
+	    		%>
 			</div>
 			
 		</div>

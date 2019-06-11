@@ -90,20 +90,15 @@
             			</div>
             			
             			<div class="field">
-            				<div class="ui equal width devided grid">
-            					<div class="ui column">
-            						<input name="userYear" placeholder="년" type="number" />
-            					</div>
-            					<div class="ui column">
-            						<input name="userMonth" placeholder="월" type="number" />
-            					</div>
-            					<div class="ui column">
-            						<input name="userDay" placeholder="일" type="number" />
-            					</div>
-            				</div>
-              				
+            				<div class="ui calendar datepicker">
+							    <div class="ui left icon input">
+							    	<i class="calendar icon"></i>
+                				
+                					<input id="userBornInput" name="userBorn" placeholder="생년월일" type="text"/>
+							    </div>
+							</div>
             			</div>
-            			
+              				
             			<br />
             			
             			<div class="ui horizontal divider">
