@@ -24,7 +24,6 @@
            			
 		            <a class="item" href="#aboutPage">소개</a>
 		            <a class="item" href="#studyGroupPage">스터디 그룹</a>
-		            <a class="item" href="#contactPage">문의</a>
             		
             		<!-- 우측 정렬 메뉴 아이템 -->
             		<div class="right item">
@@ -43,6 +42,24 @@
             		시작하기 <i class="right arrow icon"></i>
           		</a>
         	</div>
-  		</div>	
+  		</div>
+  		
+  		<div class="ui large top fixed inverted pointing hidden menu" id="mainMenu">
+      		<div class="ui container">
+       			<!-- 메뉴 아이템 -->
+       			<a class="header item" href="#root">
+       				<i class="pencil alternate icon"></i> 코스터디
+       			</a>
+          			
+	            <a class="item" href="#aboutPage">소개</a>
+	            <a class="item" href="#studyGroupPage">스터디 그룹</a>
+           		
+           		<!-- 우측 정렬 메뉴 아이템 -->
+           		<div class="right item">
+             			<a class="ui inverted button" id="btnLogin" href="login.jsp">로그인</a>
+           			<a class="ui inverted button" id="btnRegister" href="register.jsp">회원가입</a>
+           		</div>
+      		</div>
+    	</div>
     </body>
 		

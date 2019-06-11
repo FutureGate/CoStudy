@@ -1,6 +1,7 @@
 package cst.command.group.board;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ public class GroupBoardDeleteCommand implements CstCommand {
 	public int execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String boardID = req.getParameter("bbsID");
 		String groupName = req.getParameter("groupname");
+		
+		groupName = URLDecoder.decode(groupName, "UTF-8");
 		
 		GroupDAO dao = new GroupDAO();
 		

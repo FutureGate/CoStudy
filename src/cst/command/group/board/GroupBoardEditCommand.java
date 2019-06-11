@@ -1,6 +1,7 @@
 package cst.command.group.board;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,8 @@ public class GroupBoardEditCommand implements CstCommand {
 		String groupName = req.getParameter("groupname");
 		String boardTitle = req.getParameter("boardTitle");
 		String boardContent = req.getParameter("boardContent");
+		
+		groupName = URLDecoder.decode(groupName, "UTF-8");
 		
 		GroupDAO dao = new GroupDAO();
 		

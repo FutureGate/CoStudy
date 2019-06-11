@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.GroupDTO"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
@@ -55,11 +56,11 @@
 			            			<div class="ui right aligned grid">
 		  								<div class="left aligned eleven wide column">
 		    								<%= i+1 %> 위 
-		    								<pre><i class="book icon"></i> <%= group.getGroupName() %> - <%= group.getGroupScore() %> 점</pre>
+		    								<pre><i class="book icon"></i> <%= group.getGroupName2() %> - <%= group.getGroupScore() %> 점</pre>
 										</div>
 										
 										<div class="five wide column"">
-	    										<a class="ui blue button" href="/CoStudy/group/view.do?groupname=<%= group.getGroupName() %>">바로가기</a>
+	    										<a class="ui blue button" href="/CoStudy/group/view.do?groupname=<%= URLEncoder.encode(group.getGroupName(), "UTF-8") %>">바로가기</a>
 		  								</div>
 			  						</div>
 			            		</div>

@@ -28,7 +28,7 @@
         		<a class="item" href="/CoStudy/group/viewAll.do">스터디 그룹</a>
         		<a class="item" href="/CoStudy/bbs/list.do?bbs=notice">공지 사항</a>
             	<a class="item" href="/CoStudy/bbs/list.do?bbs=free">자유 게시판</a>
-            	<a class="item" href="/CoStudy/chat.do">메시지</a>
+            	<a class="item" href="/CoStudy/chat/receive.do">메시지</a>
             	
             	<div class="ui right item">
             		<div class="ui icon input">
@@ -42,7 +42,6 @@
 				    	<i class="dropdown icon"></i>
 				    	
 				    	<div class="menu">
-				      		<a class="item" href="/CoStudy/user/profile.do">프로필</a>
 				      		<a class="item" href="/CoStudy/user/nicknameSetting.do">계정 설정</a>
 				      		<a class="item" href="/CoStudy/user/logout.do">로그아웃</a>
 				    	</div>

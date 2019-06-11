@@ -22,7 +22,7 @@ public class UserRegisterCommand implements CstCommand {
 		String userPassword = req.getParameter("userPassword");
 		String userNick = req.getParameter("userNick");
 		String userEmail = req.getParameter("userEmail");
-		String userBorn = req.getParameter("userYear") + "-" + req.getParameter("userMonth") + "-" + req.getParameter("userDay");
+		String userBorn = req.getParameter("userBorn");
 		String userGender = req.getParameter("userGender");
 		
 		UserDAO dao = new UserDAO();

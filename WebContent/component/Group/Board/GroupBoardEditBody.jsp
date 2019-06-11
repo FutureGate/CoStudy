@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -55,7 +56,7 @@
 							    		<th class="fifteen wide">
 							    			<div class="ui fluid input">
 							    				<input type="text" name="boardTitle" value="<%= board.getBoardTitle() %>"></input>
-							    				<input type="hidden" name="groupname" value="<%= groupName %>"></input>
+							    				<input type="hidden" name="groupname" value="<%= URLEncoder.encode(groupName, "UTF-8") %>"></input>
 							    				<input type="hidden" name="userID" value="<%= userID %>"></input>
 							    				<input type="hidden" name="userNick" value="<%= userNick %>"></input>
 							    				<input type="hidden" name="boardID" value="<%= boardID %>"></input>
@@ -75,8 +76,8 @@
 							</table>
 							
 							<div style="text-align: right;">
-								<a class="ui black button" href="list.do?groupname=<%= groupName %>">목록</a>
-								<a class="ui black button" href="view.do?groupname=<%= groupName %>&bbsID=<%= board.getBoardID() %>">취소</a>
+								<a class="ui black button" href="list.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">목록</a>
+								<a class="ui black button" href="view.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>&bbsID=<%= board.getBoardID() %>">취소</a>
 								<input type="submit" class="ui red button" value="수정"></a>
 							</div>
 						</form>

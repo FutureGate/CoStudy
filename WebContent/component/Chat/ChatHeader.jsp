@@ -26,20 +26,12 @@
 				<br />
 				
 				<div class="ui secondary pointing menu">
-					<a class="item" href="/CoStudy/group/view.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
-		 				그룹 정보
+					<a class="item" href="/CoStudy/chat/receive.do">
+		 				받은 메시지
 					</a>
 		  		
-			  		<a class="item" href="/CoStudy/group/bbs/list.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
-			    		그룹 게시판
-			  		</a>
-			  		
-			  		<a class="item" href="/CoStudy/group/modify.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
-			    		그룹 정보 수정
-			  		</a>
-			  		
-			  		<a class="item active" href="/CoStudy/group/accept.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
-			    		가입 승인
+			  		<a class="item" href="/CoStudy/chat/send.do">
+			    		보낸 메시지
 			  		</a>
 				</div>
 		</div>

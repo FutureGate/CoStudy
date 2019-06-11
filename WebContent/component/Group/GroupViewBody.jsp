@@ -1,3 +1,5 @@
+<%@page import="java.net.URLDecoder"%>
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@page import="cst.dto.GroupDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
@@ -76,7 +78,7 @@
 		  		<%
 		  			if(isRegistered == 1) {
 		  		%>
-			  		<a class="item" href="/CoStudy/group/bbs/list.do?groupname=<%= groupName %>">
+			  		<a class="item" href="/CoStudy/group/bbs/list.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 			    		그룹 게시판
 			  		</a>
 			  	<%
@@ -86,11 +88,11 @@
 			  	<%
 		  			if(group.getGroupMaster().equals(user.getUserID())) {
 		  		%>
-			  		<a class="item" href="/CoStudy/group/modify.do?groupname=<%= groupName %>">
+			  		<a class="item" href="/CoStudy/group/modify.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 			    		그룹 정보 수정
 			  		</a>
 			  		
-			  		<a class="item" href="/CoStudy/group/accept.do?groupname=<%= groupName %>">
+			  		<a class="item" href="/CoStudy/group/accept.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 			    		가입 승인
 			  		</a>
 			  	<%
@@ -103,7 +105,7 @@
 					if(isRegistered == 0) {
 			%>
 						<form method="post" action="registerAction.do">
-							<input type="hidden" name="groupname" value="<%= groupName %>" />
+							<input type="hidden" name="groupname" value="<%= URLEncoder.encode(groupName, "UTF-8") %>" />
 							<input type="hidden" name="userID" value="<%= user.getUserID() %>" />
 							<input type="submit" class="ui red button" value="가입신청" />
 						</form>
@@ -129,7 +131,7 @@
 			 	<thead>
 			    	<tr>
 			    		<th class="two wide">그룹 이름</th>
-			    		<th class="six wide"><%= group.getGroupName() %></th>
+			    		<th class="six wide"><%= group.getGroupName2() %></th>
 			    		<th class="two wide">그룹장</th>
 			    		<th class="six wide"><%= group.getGroupMaster() %></th>
 			  		</tr>
@@ -138,6 +140,12 @@
 			    		<th class="six wide"><%=  group.getStudyStart() %></th>
 			    		<th class="two wide">스터디 종료</th>
 			    		<th class="six wide"><%= group.getStudyFinish() %></th>
+			  		</tr>
+			  		<tr>
+			    		<th class="two wide">인원</th>
+			    		<th class="six wide"><%=  group.getGroupPop() %></th>
+			    		<th class="two wide">그룹 점수</th>
+			    		<th class="six wide"><%= group.getGroupScore() %></th>
 			  		</tr>
 			  	</thead>
 			  	<tbody>

@@ -18,11 +18,11 @@
 								<i class="chess queen icon"></i> 소개
 		              		</h3>
 		              		<p>
-			                	현재 100000명이 코스터디에서 공부 중입니다.
+			                	코스터디는 스터디그룹을 위한 웹 서비스 입니다.
 		              		</p>
 		              		
 		              		<p>
-		              			구글 차트가 들어가야 겠지요
+		              			<img src="/CoStudy/img/study_main.jpg" ></img>
 		              		</p>
 	              		</div>
 	              
@@ -35,26 +35,7 @@
 								<i class="book icon"></i> 스터디 그룹
 		              		</h3>
 		              		<p>
-			                	현재 100000명이 코스터디에서 공부 중입니다.
-		              		</p>
-		              		
-		              		<p>
-		              			구글 차트가 들어가야 겠지요
-		              		</p>
-	              		</div>
-	              		
-	              		<!-- 문의 페이지 -->
-	              		<div id="contactPage">
-	              			<br />
-		              		<h3 class="ui horizontal divider header">
-								<i class="envelope outline icon"></i> 문의
-		              		</h3>
-		              		<p>
-			                	현재 100000명이 코스터디에서 공부 중입니다.
-		              		</p>
-		              		
-		              		<p>
-		              			구글 차트가 들어가야 겠지요
+			                	지금 바로 코스터디에서 그룹을 만들고 스터디를 진행하세요.
 		              		</p>
 	              		</div>
 	            	</div>

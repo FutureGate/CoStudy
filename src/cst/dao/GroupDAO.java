@@ -1,5 +1,8 @@
 package cst.dao;
 
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,6 +59,8 @@ public class GroupDAO {
 			ArrayList<Document> board = new ArrayList<Document>();
 			ArrayList<String> registered = new ArrayList<String>();
 			ArrayList<String> registerWaiting = new ArrayList<String>();
+			
+			groupName = URLEncoder.encode(groupName, "UTF-8");
 			
 			if(isGroupExist(groupName) != 1) {
 				registered.add(groupMaster);
@@ -167,6 +172,7 @@ public class GroupDAO {
 				
 				GroupDTO group = new GroupDTO();
 				
+				group.setGroupURL(rs.getString("groupURL"));
 				group.setGroupName(rs.getString("groupName"));
 				group.setGroupMaster(rs.getString("groupMaster"));
 				group.setStudyStart(rs.getString("studyStart"));
@@ -206,6 +212,7 @@ public class GroupDAO {
 				
 				GroupDTO group = new GroupDTO();
 				
+				group.setGroupURL(rs.getString("groupURL"));
 				group.setGroupName(rs.getString("groupName"));
 				group.setGroupMaster(rs.getString("groupMaster"));
 				group.setStudyStart(rs.getString("studyStart"));
@@ -243,6 +250,7 @@ public class GroupDAO {
 				
 				GroupDTO group = new GroupDTO();
 				
+				group.setGroupURL(rs.getString("groupURL"));
 				group.setGroupName(rs.getString("groupName"));
 				group.setGroupMaster(rs.getString("groupMaster"));
 				group.setStudyStart(rs.getString("studyStart"));

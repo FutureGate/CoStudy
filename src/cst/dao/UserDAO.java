@@ -313,8 +313,13 @@ public class UserDAO {
 			if(cur.hasNext()) {
 				Document rs = cur.next();
 				
-				if(rs.getString("userPassword").equals(originPassword)) {
-					
+				AES256Util aes = new AES256Util();
+				
+				String encPassword = rs.getString("userPassword");
+				encPassword = aes.decrypt(encPassword);
+				
+				if(encPassword.equals(originPassword)) {
+					newPassword = aes.encrypt(newPassword);
 					user.append("userPassword", newPassword);
 
 					update = new Document("$set", user);

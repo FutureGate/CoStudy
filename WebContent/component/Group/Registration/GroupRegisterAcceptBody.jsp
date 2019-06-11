@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -16,6 +17,10 @@
 	
 	if(session.getAttribute("user") != null) {
 		user = (UserDTO) session.getAttribute("user");
+	}
+	
+	if(request.getParameter("groupname") != null) {
+		groupName = request.getParameter("groupname");
 	}
 	
 	if(request.getAttribute("registerWaiting") != null) {
@@ -48,8 +53,8 @@
 										</div>
 										
 										<div class="five wide column"">
-	    										<a class="ui blue button" href="/CoStudy/group/acceptAction.do?groupname=<%= groupName %>&userID=<%= id %>">승인</a>
-	    										<a class="ui red button" href="/CoStudy/group/denyAction.do?groupname=<%= groupName %>&userID=<%= id %>">거절</a>
+	    										<a class="ui blue button" href="/CoStudy/group/acceptAction.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>&userID=<%= id %>">승인</a>
+	    										<a class="ui red button" href="/CoStudy/group/denyAction.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>&userID=<%= id %>">거절</a>
 		  								</div>
 			  						</div>
 			            		</div>

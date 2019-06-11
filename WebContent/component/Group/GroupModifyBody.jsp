@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.GroupDTO"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -78,19 +79,19 @@
 	
 		<div class="ui container">
 			<div class="ui secondary pointing menu">
-	  				<a class="item" href="/CoStudy/group/view.do?groupname=<%= groupName %>">
+	  				<a class="item" href="/CoStudy/group/view.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 	    				그룹 정보
 	  				</a>
 			  		
-			  		<a class="item" href="/CoStudy/group/bbs/list.do?groupname=<%= groupName %>">
+			  		<a class="item" href="/CoStudy/group/bbs/list.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 			    		그룹 게시판
 			  		</a>
 			  		
-			  		<a class="item active" href="/CoStudy/group/modify.do?groupname=<%= groupName %>">
+			  		<a class="item active" href="/CoStudy/group/modify.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 			    		그룹 정보 수정
 			  		</a>
 			  		
-			  		<a class="item" href="/CoStudy/group/accept.do?groupname=<%= groupName %>">
+			  		<a class="item" href="/CoStudy/group/accept.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">
 			    		가입 승인
 			  		</a>
 			</div>
@@ -111,7 +112,7 @@
         		<form class="ui large form" action="modifyAction.do" method="post">
           			<div class="ui stacked segment">
           			
-                		<input name="groupname"  value="<%= group.getGroupName() %>" type="hidden" />
+                		<input name="groupname"  value="<%= URLEncoder.encode(group.getGroupName(), "UTF-8") %>" type="hidden" />
 
             			<div class="ui horizontal divider">
             				스터디 시작 시간

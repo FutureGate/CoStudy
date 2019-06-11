@@ -24,6 +24,8 @@ public class GroupRegisterCommand implements CstCommand {
 		String groupName = req.getParameter("groupname");
 		String userID = req.getParameter("userID");
 		
+		groupName = URLDecoder.decode(groupName, "UTF-8");
+		
 		GroupDAO dao = new GroupDAO();
 		
 		GroupDTO group = dao.getGroup(groupName);

@@ -25,6 +25,8 @@ public class GroupDenyCommand implements CstCommand {
 		String groupName = req.getParameter("groupname");
 		String userID = req.getParameter("userID");
 		
+		System.out.println(groupName);
+		
 		GroupDAO dao = new GroupDAO();
 		
 		int result =  dao.denyUser(groupName, userID);

@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="cst.dto.UserDTO"%>
 <%@page import="cst.dto.BoardDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -69,14 +70,14 @@
 						</table>
 						
 						<div style="text-align: right;">
-							<a class="ui black button" href="list.do?groupname=<%= groupName %>">목록</a>
+							<a class="ui black button" href="list.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>">목록</a>
 							
 							<%
 								if(userID != null && boardUserID != null) {	
 									if(userID.equals(boardUserID)) {
 							%>
 								
-								<a class="ui red button" href="edit.do?groupname=<%= groupName %>&bbsID=<%= board.getBoardID() %>">수정</a>
+								<a class="ui red button" href="edit.do?groupname=<%= URLEncoder.encode(groupName, "UTF-8") %>&bbsID=<%= board.getBoardID() %>">수정</a>
 								<button class="ui red button" id="btnDelete">삭제</button>
 							<%
 									}

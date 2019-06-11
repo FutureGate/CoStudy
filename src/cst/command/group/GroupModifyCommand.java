@@ -29,6 +29,8 @@ public class GroupModifyCommand implements CstCommand {
 		String studyFinish = req.getParameter("studyFinish");
 		String studyLocation = req.getParameter("studyLocation");
 
+		groupName = URLDecoder.decode(groupName, "UTF-8");
+		
 		GroupDAO dao = new GroupDAO();
 		
 		if(dao.modifyGroup(groupName, studyStart, studyFinish, studyLocation) == 1) {
